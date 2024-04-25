@@ -1,6 +1,1 @@
-const a = {
-    name: "herik",
-    sobrenome: "santos",
-};
-
-console.log(Object.keys(a));
+console.log(null ?? "oi");

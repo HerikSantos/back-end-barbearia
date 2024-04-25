@@ -17,12 +17,12 @@ describe("Create client", () => {
         const cliente = {
             name: "cliente teste",
             qtd_cortes: 5,
-            data_nasc: "2001-04-26",
+            data_nasc: new Date("2001-04-26"),
         };
 
         await createClienteUseCase.execute(cliente);
 
-        const clientExist = await clienteRepositoryMemory.findAll({
+        const clientExist = await clienteRepositoryMemory.findOne({
             name: cliente.name,
             data_nasc: cliente.data_nasc,
         });
@@ -35,7 +35,7 @@ describe("Create client", () => {
             const cliente = {
                 name: "cliente teste",
                 qtd_cortes: 5,
-                data_nasc: "2001-04-26",
+                data_nasc: new Date("2001-04-26"),
             };
 
             await createClienteUseCase.execute(cliente);

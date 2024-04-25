@@ -10,17 +10,17 @@ class ReadClientesController {
     }
 
     async handle(request: Request, response: Response): Promise<Response> {
-        const { name, data_nasc }: { name: string; data_nasc: string } =
-            request.body;
+        const { name } = request.query ?? "";
 
-        if (!name && !data_nasc) throw new AppError("Error", 400);
+        if (typeof name !== "string" && typeof name !== "undefined") {
+            throw new AppError("Invalid type", 400);
+        }
 
         const clientes = await this.readClientesUseCase.execute({
             name,
-            data_nasc,
         });
 
-        return response.json(clientes);
+        return response.status(200).json(clientes);
     }
 }
 

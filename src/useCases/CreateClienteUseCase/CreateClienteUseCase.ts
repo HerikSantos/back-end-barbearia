@@ -12,7 +12,10 @@ class CreateClienteUseCase {
     }
 
     async execute({ name, data_nasc, qtd_cortes }: IRequest): Promise<void> {
-        const clintExists = await this.clienteRepository.findAll({
+        if (!data_nasc || !name || !qtd_cortes)
+            throw new AppError("Missing data", 400);
+
+        const clintExists = await this.clienteRepository.findOne({
             name,
             data_nasc,
         });

@@ -27,18 +27,15 @@ class ClienteRepositoryMemory implements IClienteRepository {
         this.repositoryMemory.push(clientes);
     }
 
-    async findAll({
+    async findOne({
         name,
         data_nasc,
     }: {
         name: string;
-        data_nasc: string;
+        data_nasc: Date;
     }): Promise<Clientes[] | Clientes | undefined> {
         const findedClient = this.repositoryMemory.find((cliente) => {
-            return (
-                cliente.name === name &&
-                cliente.data_nasc.toString() === data_nasc
-            );
+            return cliente.name === name && cliente.data_nasc === data_nasc;
         });
         return findedClient;
     }
@@ -50,10 +47,10 @@ class ClienteRepositoryMemory implements IClienteRepository {
         qtd_cortes,
     }: {
         name?: string | undefined;
-        id?: string | undefined;
-        data_nasc?: string | undefined;
+        id: string | undefined;
+        data_nasc?: Date | undefined;
         qtd_cortes?: number | undefined;
-    }): Promise<Clientes> {
+    }): Promise<Clientes | null> {
         const editClient = {
             name,
             data_nasc,
@@ -80,15 +77,30 @@ class ClienteRepositoryMemory implements IClienteRepository {
         return editedClient[0];
     }
 
-    delete: (id: string) => Promise<void>;
-    findByID: (id: string) => Promise<Clientes>;
-    findLike: ({
+    async delete(id: string): Promise<void> {
+        this.repositoryMemory.map((client, index) => {
+            if (client.id === id) {
+                this.repositoryMemory.splice(index, 1);
+            }
+            return client;
+        });
+    }
+
+    async findByID(id: string): Promise<Clientes | null> {
+        const client = this.repositoryMemory.find((client) => client.id === id);
+
+        if (!client) return null;
+
+        return client;
+    }
+
+    async findLike({
         name,
-        data_nasc,
     }: {
         name?: string;
-        data_nasc?: string;
-    }) => Promise<Clientes[] | Clientes>;
+    }): Promise<Clientes[] | Clientes> {
+        return this.repositoryMemory;
+    }
 }
 
 export { ClienteRepositoryMemory };

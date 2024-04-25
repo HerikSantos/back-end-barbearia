@@ -33,6 +33,7 @@ module.exports = {
         "prettier"
     ],
     "rules": {
+        "@typescript-eslint/no-misused-promises": "off",
         "@typescript-eslint/no-throw-literal": "off",
         "@typescript-eslint/strict-boolean-expressions": "off",
         "prettier/prettier": "error",

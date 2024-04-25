@@ -8,16 +8,9 @@ class ReadClientesUseCase {
         this.clienteRepository = clienteRepository;
     }
 
-    async execute({
-        name,
-        data_nasc,
-    }: {
-        name: string;
-        data_nasc: string;
-    }): Promise<Clientes[] | Clientes> {
+    async execute({ name }: { name?: string }): Promise<Clientes[] | Clientes> {
         const clientes = await this.clienteRepository.findLike({
             name,
-            data_nasc,
         });
         return clientes;
     }

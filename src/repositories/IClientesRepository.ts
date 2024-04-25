@@ -4,37 +4,31 @@ interface IRequest {
     id?: string;
     name: string;
     qtd_cortes: number;
-    data_nasc: string;
+    data_nasc: Date;
 }
 
 interface IClienteRepository {
     create: ({ data_nasc, name, qtd_cortes }: IRequest) => Promise<void>;
-    findLike: ({
-        name,
-        data_nasc,
-    }: {
-        name?: string;
-        data_nasc?: string;
-    }) => Promise<Clientes[] | Clientes>;
+    findLike: ({ name }: { name?: string }) => Promise<Clientes[] | Clientes>;
     edit: ({
         id,
         name,
         data_nasc,
         qtd_cortes,
     }: {
+        id: string;
         name?: string;
-        id?: string;
-        data_nasc?: string;
+        data_nasc?: Date;
         qtd_cortes?: number;
-    }) => Promise<Clientes>;
+    }) => Promise<Clientes | null>;
     delete: (id: string) => Promise<void>;
-    findByID: (id: string) => Promise<Clientes>;
-    findAll: ({
+    findByID: (id: string) => Promise<Clientes | null>;
+    findOne: ({
         name,
         data_nasc,
     }: {
-        name?: string;
-        data_nasc?: string;
+        name: string;
+        data_nasc: Date;
     }) => Promise<Clientes[] | Clientes | undefined>;
 }
 

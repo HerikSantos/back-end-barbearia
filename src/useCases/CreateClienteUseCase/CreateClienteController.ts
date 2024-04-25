@@ -12,8 +12,6 @@ class CreateClienteController {
     async handle(request: Request, response: Response): Promise<Response> {
         const { name, qtd_cortes, data_nasc } = request.body;
 
-        if (!data_nasc || !name || !qtd_cortes) throw new Error("Missing data");
-
         await this.createClienteUseCase.execute({
             name,
             data_nasc,
