@@ -1,5 +1,5 @@
-import { type Clientes } from "../../database/entities/Clientes";
-import { type IClienteRepository } from "../../repositories/IClientesRepository";
+import { type Clientes } from "../../../database/entities/Clientes";
+import { type IClienteRepository } from "../../../repositories/IClientesRepository";
 
 class ReadClientesUseCase {
     private readonly clienteRepository: IClienteRepository;

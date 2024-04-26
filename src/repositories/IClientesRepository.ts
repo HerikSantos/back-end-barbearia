@@ -29,7 +29,7 @@ interface IClienteRepository {
     }: {
         name: string;
         data_nasc: Date;
-    }) => Promise<Clientes[] | Clientes | undefined>;
+    }) => Promise<Clientes | null>;
 }
 
 export type { IClienteRepository, IRequest };

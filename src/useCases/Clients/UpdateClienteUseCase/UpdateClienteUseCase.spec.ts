@@ -1,6 +1,6 @@
-import { type Clientes } from "../../database/entities/Clientes";
-import { AppError } from "../../errors/AppErros";
-import { ClienteRepositoryMemory } from "../../repositories/ClienteRepositoryMemory";
+import { type Clientes } from "../../../database/entities/Clientes";
+import { AppError } from "../../../errors/AppErros";
+import { ClienteRepositoryMemory } from "../../../repositories/ClienteRepositoryMemory";
 import { CreateClienteUseCase } from "../CreateClienteUseCase/CreateClienteUseCase";
 import { ReadClientesUseCase } from "../ReadClienteUseCase/ReadClientesUseCase";
 import { UpdateClienteUseCase } from "./UpdateClienteUseCase";

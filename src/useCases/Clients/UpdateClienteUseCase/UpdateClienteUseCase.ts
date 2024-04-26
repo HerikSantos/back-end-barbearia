@@ -1,6 +1,6 @@
-import { type Clientes } from "../../database/entities/Clientes";
-import { AppError } from "../../errors/AppErros";
-import { type IClienteRepository } from "../../repositories/IClientesRepository";
+import { type Clientes } from "../../../database/entities/Clientes";
+import { AppError } from "../../../errors/AppErros";
+import { type IClienteRepository } from "../../../repositories/IClientesRepository";
 
 interface IRequest {
     id: string;

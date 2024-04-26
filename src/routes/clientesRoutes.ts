@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router } from "express";
 
+import { updateClienteUseCase } from "../useCases/Clients/UpdateClienteUseCase";
+import { UpdateClienteController } from "../useCases/Clients/UpdateClienteUseCase/UpdateClienteController";
 import { createClienteUseCase } from "../useCases/CreateClienteUseCase";
 import { CreateClienteController } from "../useCases/CreateClienteUseCase/CreateClienteController";
 import { deleteClienteUseCase } from "../useCases/DeleteClientUseCase";
 import { DeleteClientController } from "../useCases/DeleteClientUseCase/DeleteClientController";
 import { readClientesUseCase } from "../useCases/ReadClienteUseCase";
 import { ReadClientesController } from "../useCases/ReadClienteUseCase/ReadClientesController";
-import { updateClienteUseCase } from "../useCases/UpdateClienteUseCase";
-import { UpdateClienteController } from "../useCases/UpdateClienteUseCase/UpdateClienteController";
 
 const route = Router();
 const createClienteController = new CreateClienteController(

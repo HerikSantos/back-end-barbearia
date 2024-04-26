@@ -34,12 +34,13 @@ class ClienteRepository implements IClienteRepository {
     }: {
         name: string;
         data_nasc: Date;
-    }): Promise<Clientes[] | Clientes | undefined> {
-        const client: Clientes[] = await this.repository
+    }): Promise<Clientes | null> {
+        const client = await this.repository
             .createQueryBuilder()
             .select("*")
             .where(`name="${name}" AND data_nasc="${data_nasc.toString()}"`)
-            .getRawMany();
+            .getOne();
+
         return client;
     }
 

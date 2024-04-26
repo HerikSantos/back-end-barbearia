@@ -1,6 +1,6 @@
-import { type Clientes } from "../../database/entities/Clientes";
-import { AppError } from "../../errors/AppErros";
-import { ClienteRepositoryMemory } from "../../repositories/ClienteRepositoryMemory";
+import { type Clientes } from "../../../database/entities/Clientes";
+import { AppError } from "../../../errors/AppErros";
+import { ClienteRepositoryMemory } from "../../../repositories/ClienteRepositoryMemory";
 import { CreateClienteUseCase } from "../CreateClienteUseCase/CreateClienteUseCase";
 import { DeleteClientUseCase } from "./DeleteClientUseCase";
 
@@ -40,7 +40,7 @@ describe("Delete client", () => {
             data_nasc: newClient.data_nasc,
         });
 
-        expect(deletedClient).toBeUndefined();
+        expect(deletedClient).toBeNull();
     });
 
     it("Should be impossible delete a nonexistent client", async () => {

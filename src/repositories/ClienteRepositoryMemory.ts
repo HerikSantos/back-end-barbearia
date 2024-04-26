@@ -33,10 +33,11 @@ class ClienteRepositoryMemory implements IClienteRepository {
     }: {
         name: string;
         data_nasc: Date;
-    }): Promise<Clientes[] | Clientes | undefined> {
+    }): Promise<Clientes | null> {
         const findedClient = this.repositoryMemory.find((cliente) => {
             return cliente.name === name && cliente.data_nasc === data_nasc;
         });
+        if (!findedClient) return null;
         return findedClient;
     }
 

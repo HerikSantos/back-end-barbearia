@@ -1,8 +1,8 @@
-import { AppError } from "../../errors/AppErros";
+import { AppError } from "../../../errors/AppErros";
 import {
     type IClienteRepository,
     type IRequest,
-} from "../../repositories/IClientesRepository";
+} from "../../../repositories/IClientesRepository";
 
 class CreateClienteUseCase {
     private readonly clienteRepository: IClienteRepository;

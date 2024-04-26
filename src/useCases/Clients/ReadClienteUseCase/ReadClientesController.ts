@@ -1,6 +1,6 @@
 import { type Request, type Response } from "express";
 
-import { AppError } from "../../errors/AppErros";
+import { AppError } from "../../../errors/AppErros";
 import { type ReadClientesUseCase } from "./ReadClientesUseCase";
 
 class ReadClientesController {

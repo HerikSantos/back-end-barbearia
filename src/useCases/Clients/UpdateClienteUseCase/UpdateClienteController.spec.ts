@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { type Response, type Request } from "express";
 
-import { ClienteRepositoryMemory } from "../../repositories/ClienteRepositoryMemory";
+import { ClienteRepositoryMemory } from "../../../repositories/ClienteRepositoryMemory";
 import { CreateClienteUseCase } from "../CreateClienteUseCase/CreateClienteUseCase";
 import { UpdateClienteController } from "./UpdateClienteController";
 import { UpdateClienteUseCase } from "./UpdateClienteUseCase";

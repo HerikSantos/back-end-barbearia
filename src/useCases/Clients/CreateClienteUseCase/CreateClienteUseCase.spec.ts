@@ -1,5 +1,5 @@
-import { AppError } from "../../errors/AppErros";
-import { ClienteRepositoryMemory } from "../../repositories/ClienteRepositoryMemory";
+import { AppError } from "../../../errors/AppErros";
+import { ClienteRepositoryMemory } from "../../../repositories/ClienteRepositoryMemory";
 import { CreateClienteUseCase } from "./CreateClienteUseCase";
 
 let clienteRepositoryMemory: ClienteRepositoryMemory;

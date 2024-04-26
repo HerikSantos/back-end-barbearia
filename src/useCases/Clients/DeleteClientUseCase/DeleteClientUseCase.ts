@@ -1,5 +1,5 @@
-import { AppError } from "../../errors/AppErros";
-import { type IClienteRepository } from "../../repositories/IClientesRepository";
+import { AppError } from "../../../errors/AppErros";
+import { type IClienteRepository } from "../../../repositories/IClientesRepository";
 
 class DeleteClientUseCase {
     private readonly clientRepository: IClienteRepository;

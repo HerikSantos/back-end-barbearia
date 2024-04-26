@@ -1,4 +1,4 @@
-import { ClienteRepositoryMemory } from "../../repositories/ClienteRepositoryMemory";
+import { ClienteRepositoryMemory } from "../../../repositories/ClienteRepositoryMemory";
 import { CreateClienteUseCase } from "../CreateClienteUseCase/CreateClienteUseCase";
 import { ReadClientesUseCase } from "./ReadClientesUseCase";
 
