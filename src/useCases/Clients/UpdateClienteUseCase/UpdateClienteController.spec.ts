@@ -2,22 +2,17 @@
 import { type Response, type Request } from "express";
 
 import { ClienteRepositoryMemory } from "../../../repositories/ClienteRepositoryMemory";
-import { CreateClienteUseCase } from "../CreateClienteUseCase/CreateClienteUseCase";
 import { UpdateClienteController } from "./UpdateClienteController";
 import { UpdateClienteUseCase } from "./UpdateClienteUseCase";
 
 let clienteRepositoryMemory: ClienteRepositoryMemory;
 let updateClienteUseCase: UpdateClienteUseCase;
-let createClienteUseCase: CreateClienteUseCase;
 let updateClienteController: UpdateClienteController;
 
 describe("Edit client", () => {
     beforeEach(() => {
         clienteRepositoryMemory = new ClienteRepositoryMemory();
         updateClienteUseCase = new UpdateClienteUseCase(
-            clienteRepositoryMemory,
-        );
-        createClienteUseCase = new CreateClienteUseCase(
             clienteRepositoryMemory,
         );
         updateClienteController = new UpdateClienteController(
@@ -40,11 +35,11 @@ describe("Edit client", () => {
         mockResponse.status = jest.fn().mockReturnThis();
         mockResponse.json = jest.fn();
 
-        await createClienteUseCase.execute(client);
+        await clienteRepositoryMemory.create(client);
 
         const createdClient = await clienteRepositoryMemory.findOne(client);
 
-        if (createdClient && !Array.isArray(createdClient)) {
+        if (createdClient) {
             mockRequest.params = {
                 id: createdClient.id,
             };
@@ -56,5 +51,7 @@ describe("Edit client", () => {
             // eslint-disable-next-line @typescript-eslint/unbound-method
             expect(mockResponse.status).toHaveBeenCalledWith(200);
         }
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
 });

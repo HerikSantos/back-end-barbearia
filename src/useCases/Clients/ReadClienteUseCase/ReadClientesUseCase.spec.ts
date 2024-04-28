@@ -1,18 +1,13 @@
 import { ClienteRepositoryMemory } from "../../../repositories/ClienteRepositoryMemory";
-import { CreateClienteUseCase } from "../CreateClienteUseCase/CreateClienteUseCase";
 import { ReadClientesUseCase } from "./ReadClientesUseCase";
 
 let clienteRepositoryMemory: ClienteRepositoryMemory;
 let readClienteUseCase: ReadClientesUseCase;
-let createClienteUseCase: CreateClienteUseCase;
 
 describe("Should be list all clients", () => {
     beforeEach(() => {
         clienteRepositoryMemory = new ClienteRepositoryMemory();
         readClienteUseCase = new ReadClientesUseCase(clienteRepositoryMemory);
-        createClienteUseCase = new CreateClienteUseCase(
-            clienteRepositoryMemory,
-        );
     });
     it("List all client", async () => {
         const client = {
@@ -26,9 +21,9 @@ describe("Should be list all clients", () => {
             data_nasc: new Date("2001-04-21"),
         };
 
-        await createClienteUseCase.execute(client);
+        await clienteRepositoryMemory.create(client);
 
-        await createClienteUseCase.execute(client2);
+        await clienteRepositoryMemory.create(client2);
 
         const findedClient = await readClienteUseCase.execute({
             name: client.name,

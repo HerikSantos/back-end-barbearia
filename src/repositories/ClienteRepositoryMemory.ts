@@ -5,15 +5,6 @@ import { type IClienteRepository, type IRequest } from "./IClientesRepository";
 class ClienteRepositoryMemory implements IClienteRepository {
     private readonly repositoryMemory: Clientes[] = [];
 
-    private static instance: ClienteRepositoryMemory;
-
-    public static getInstace(): ClienteRepositoryMemory {
-        if (!ClienteRepositoryMemory.instance) {
-            ClienteRepositoryMemory.instance = new ClienteRepositoryMemory();
-        }
-        return ClienteRepositoryMemory.instance;
-    }
-
     async create({ data_nasc, name, qtd_cortes }: IRequest): Promise<void> {
         const clientes = new Clientes();
         const cliente = {

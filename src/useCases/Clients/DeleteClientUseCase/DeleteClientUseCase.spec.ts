@@ -1,18 +1,14 @@
-import { type Clientes } from "../../../database/entities/Clientes";
 import { AppError } from "../../../errors/AppErros";
 import { ClienteRepositoryMemory } from "../../../repositories/ClienteRepositoryMemory";
-import { CreateClienteUseCase } from "../CreateClienteUseCase/CreateClienteUseCase";
 import { DeleteClientUseCase } from "./DeleteClientUseCase";
 
 let deleteClientUseCase: DeleteClientUseCase;
 let clienteRepositoryMemory: ClienteRepositoryMemory;
-let createClientUseCase: CreateClienteUseCase;
 
 describe("Delete client", () => {
     beforeEach(() => {
         clienteRepositoryMemory = new ClienteRepositoryMemory();
         deleteClientUseCase = new DeleteClientUseCase(clienteRepositoryMemory);
-        createClientUseCase = new CreateClienteUseCase(clienteRepositoryMemory);
     });
 
     it("Should be possible delete an exists client", async () => {
@@ -22,7 +18,7 @@ describe("Delete client", () => {
             qtd_cortes: 2,
         };
 
-        await createClientUseCase.execute(client);
+        await clienteRepositoryMemory.create(client);
 
         const createdClient = await clienteRepositoryMemory.findOne({
             name: client.name,
@@ -31,14 +27,10 @@ describe("Delete client", () => {
 
         if (!createdClient) throw new AppError("Client not found");
 
-        const newClient: Clientes = createdClient[0] ?? createdClient;
+        await deleteClientUseCase.execute(createdClient.id);
 
-        await deleteClientUseCase.execute(newClient.id);
-
-        const deletedClient = await clienteRepositoryMemory.findOne({
-            name: newClient.name,
-            data_nasc: newClient.data_nasc,
-        });
+        const deletedClient =
+            await clienteRepositoryMemory.findOne(createdClient);
 
         expect(deletedClient).toBeNull();
     });
@@ -51,7 +43,7 @@ describe("Delete client", () => {
                 qtd_cortes: 2,
             };
 
-            await createClientUseCase.execute(client);
+            await clienteRepositoryMemory.create(client);
 
             const createdClient = await clienteRepositoryMemory.findOne({
                 name: "Joao",

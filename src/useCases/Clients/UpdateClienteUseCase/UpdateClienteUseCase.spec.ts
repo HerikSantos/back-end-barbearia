@@ -1,14 +1,11 @@
-import { type Clientes } from "../../../database/entities/Clientes";
+import { v4 as uuidv4 } from "uuid";
+
 import { AppError } from "../../../errors/AppErros";
 import { ClienteRepositoryMemory } from "../../../repositories/ClienteRepositoryMemory";
-import { CreateClienteUseCase } from "../CreateClienteUseCase/CreateClienteUseCase";
-import { ReadClientesUseCase } from "../ReadClienteUseCase/ReadClientesUseCase";
 import { UpdateClienteUseCase } from "./UpdateClienteUseCase";
 
 let clienteRepositoryMemory: ClienteRepositoryMemory;
 let updateClienteUseCase: UpdateClienteUseCase;
-let createClienteUseCase: CreateClienteUseCase;
-let readClientsUseCase: ReadClientesUseCase;
 
 describe("Should be edit client", () => {
     beforeEach(() => {
@@ -16,47 +13,38 @@ describe("Should be edit client", () => {
         updateClienteUseCase = new UpdateClienteUseCase(
             clienteRepositoryMemory,
         );
-        createClienteUseCase = new CreateClienteUseCase(
-            clienteRepositoryMemory,
-        );
-        readClientsUseCase = new ReadClientesUseCase(clienteRepositoryMemory);
     });
 
     it("Edit client", async () => {
-        await createClienteUseCase.execute({
+        const client = {
             name: "cobaia",
             data_nasc: new Date("2001-04-02"),
             qtd_cortes: 5,
-        });
+        };
 
-        const findedClient = await readClientsUseCase.execute({
-            name: "cobaia",
-        });
+        await clienteRepositoryMemory.create(client);
 
-        const client: Clientes = findedClient[0];
+        const findedClient = await clienteRepositoryMemory.findOne(client);
 
-        client.name = "Teste123";
+        if (!findedClient) throw new AppError("Client not found");
 
-        const clientEdited = await updateClienteUseCase.execute(client);
+        findedClient.name = "Teste123";
 
-        expect(clientEdited.name).toBe("Teste123");
+        const editedClient = await updateClienteUseCase.execute(findedClient);
+
+        expect(editedClient.name).toBe("Teste123");
     });
 
     it("Should be impossible edit a client nonexisting", async () => {
         await expect(async () => {
             const client = {
+                id: uuidv4(),
                 name: "cobaia",
                 data_nasc: new Date("2001-04-02"),
                 qtd_cortes: 5,
             };
 
-            await createClienteUseCase.execute(client);
-
-            client.name = "tico";
-
-            const result = await clienteRepositoryMemory.findOne(client);
-
-            if (!result) throw new AppError("Client not found");
+            await updateClienteUseCase.execute(client);
         }).rejects.toBeInstanceOf(AppError);
     });
 });

@@ -2,19 +2,16 @@
 import { type Response, type Request } from "express";
 
 import { ClienteRepositoryMemory } from "../../../repositories/ClienteRepositoryMemory";
-import { CreateClienteUseCase } from "../CreateClienteUseCase/CreateClienteUseCase";
 import { DeleteClientController } from "./DeleteClientController";
 import { DeleteClientUseCase } from "./DeleteClientUseCase";
 
 let clienteRepositoryMemory: ClienteRepositoryMemory;
-let createClientUseCase: CreateClienteUseCase;
 let deleteClientController: DeleteClientController;
 let deleteClientUseCase: DeleteClientUseCase;
 
 describe("Delete client", () => {
     beforeEach(() => {
         clienteRepositoryMemory = new ClienteRepositoryMemory();
-        createClientUseCase = new CreateClienteUseCase(clienteRepositoryMemory);
         deleteClientUseCase = new DeleteClientUseCase(clienteRepositoryMemory);
         deleteClientController = new DeleteClientController(
             deleteClientUseCase,
@@ -35,11 +32,11 @@ describe("Delete client", () => {
         mockResponse.status = jest.fn().mockReturnThis();
         mockResponse.send = jest.fn();
 
-        await createClientUseCase.execute(client);
+        await clienteRepositoryMemory.create(client);
 
         const createdClient = await clienteRepositoryMemory.findOne(client);
 
-        if (createdClient && !Array.isArray(createdClient)) {
+        if (createdClient) {
             mockRequest.params = {
                 id: createdClient.id,
             };
@@ -49,5 +46,7 @@ describe("Delete client", () => {
             // eslint-disable-next-line @typescript-eslint/unbound-method
             expect(mockResponse.status).toHaveBeenCalledWith(200);
         }
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
 });
