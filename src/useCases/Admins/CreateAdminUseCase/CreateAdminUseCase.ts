@@ -1,3 +1,5 @@
+import validator from "validator";
+
 import { AppError } from "../../../errors/AppErros";
 import {
     type IAdminsRepository,

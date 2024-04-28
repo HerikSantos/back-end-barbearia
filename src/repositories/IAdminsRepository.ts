@@ -8,11 +8,7 @@ interface IRequestAdmin {
 
 interface IAdminsRepository {
     create: ({ name, email, password }: IRequestAdmin) => Promise<void>;
-    findAll: ({
-        email,
-    }: {
-        email?: string;
-    }) => Promise<Admins[] | Admins | null>;
+    findAll: () => Promise<Admins[] | Admins>;
     edit: ({
         id,
         name,

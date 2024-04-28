@@ -22,7 +22,7 @@ class UpdateClienteUseCase {
         data_nasc,
         qtd_cortes,
     }: IRequest): Promise<Clientes> {
-        if (!id) throw new AppError("Client not found", 400);
+        if (!id) throw new AppError("Id is required", 400);
 
         const newClient = await this.clienteRepository.edit({
             id,
