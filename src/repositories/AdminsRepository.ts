@@ -13,6 +13,10 @@ class AdminsRepository implements IAdminsRepository {
         this.repository = appDataSource.getRepository(Admins);
     }
 
+    async findOne({ email }: { email: string }): Promise<Admins | null> {
+        return await this.repository.findOneBy({ email });
+    }
+
     async create({ name, email, password }: IRequestAdmin): Promise<void> {
         const admin = this.repository.create({
             name,
@@ -23,18 +27,7 @@ class AdminsRepository implements IAdminsRepository {
         await this.repository.save(admin);
     }
 
-    async findLike({
-        email,
-    }: {
-        email?: string;
-    }): Promise<Admins | Admins[] | null> {
-        if (email) {
-            const admins = await this.repository.findOneBy({
-                email,
-            });
-            return admins;
-        }
-
+    async findAll(): Promise<Admins | Admins[] | null> {
         const admins = await this.repository.find();
         return admins;
     }
@@ -46,9 +39,9 @@ class AdminsRepository implements IAdminsRepository {
         password,
     }: {
         id: string;
-        name?: string | undefined;
-        email?: string | undefined;
-        password?: string | undefined;
+        name?: string;
+        email?: string;
+        password?: string;
     }): Promise<Admins | null> {
         const admin = await this.findByID(id);
 

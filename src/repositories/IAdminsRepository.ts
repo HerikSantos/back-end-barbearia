@@ -8,7 +8,7 @@ interface IRequestAdmin {
 
 interface IAdminsRepository {
     create: ({ name, email, password }: IRequestAdmin) => Promise<void>;
-    findLike: ({
+    findAll: ({
         email,
     }: {
         email?: string;
@@ -26,6 +26,7 @@ interface IAdminsRepository {
     }) => Promise<Admins | null>;
     delete: (id: string) => Promise<void>;
     findByID: (id: string) => Promise<Admins | null>;
+    findOne: ({ email }: { email: string }) => Promise<Admins | null>;
 }
 
 export type { IAdminsRepository, IRequestAdmin };

@@ -10,6 +10,7 @@ class AdminsRepositoryMemory implements IAdminsRepository {
 
     async create({ name, email, password }: IRequestAdmin): Promise<void> {
         const admins = new Admins();
+
         const admin = {
             name,
             email,
@@ -21,19 +22,13 @@ class AdminsRepositoryMemory implements IAdminsRepository {
         this.repositoryMemory.push(admins);
     }
 
-    // async findOne({
-    //     name,
-    //     data_nasc,
-    // }: {
-    //     name: string;
-    //     data_nasc: Date;
-    // }): Promise<Admins | null> {
-    //     const findedClient = this.repositoryMemory.find((cliente) => {
-    //         return cliente.name === name && cliente.data_nasc === data_nasc;
-    //     });
-    //     if (!findedClient) return null;
-    //     return findedClient;
-    // }
+    async findOne({ email }: { email: string }): Promise<Admins | null> {
+        const findedAdmin = this.repositoryMemory.find((admin) => {
+            return admin.email === email;
+        });
+        if (!findedAdmin) return null;
+        return findedAdmin;
+    }
 
     async edit({
         id,
@@ -89,14 +84,7 @@ class AdminsRepositoryMemory implements IAdminsRepository {
         return admin;
     }
 
-    async findLike({ email }: { email?: string }): Promise<Admins[] | Admins> {
-        if (email) {
-            const admin = this.repositoryMemory.find(
-                (admin) => admin.email === email,
-            );
-            if (!admin) return this.repositoryMemory;
-            return admin;
-        }
+    async findAll(): Promise<Admins[] | Admins> {
         return this.repositoryMemory;
     }
 }
