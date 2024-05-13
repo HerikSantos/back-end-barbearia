@@ -27,8 +27,16 @@ class AdminsRepository implements IAdminsRepository {
         await this.repository.save(admin);
     }
 
-    async findAll(): Promise<Admins | Admins[]> {
-        const admins = await this.repository.find();
+    async findAll(): Promise<Admins[]> {
+        const admins = await this.repository.find({
+            select: {
+                email: true,
+                id: true,
+                name: true,
+                updateAt: true,
+                createdAt: true,
+            },
+        });
         return admins;
     }
 

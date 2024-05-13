@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
 
 @Entity()
@@ -17,11 +17,11 @@ class Admins {
     @Column()
     password: string;
 
-    @Column()
-    createdAt: Date;
+    @CreateDateColumn()
+    createdAt?: Date;
 
-    @Column()
-    updateAt: Date;
+    @CreateDateColumn()
+    updateAt?: Date;
 
     constructor() {
         if (!this.id) {

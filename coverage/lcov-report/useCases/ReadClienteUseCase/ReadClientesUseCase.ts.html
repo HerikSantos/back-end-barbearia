@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for useCases/ReadClienteUseCase/ReadClientesUseCase.ts</title>
+    <title>Code coverage report for useCases/ReadClienteUseCase/ReadClientsUseCase.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -15,41 +15,41 @@
         }
     </style>
 </head>
-    
+
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">useCases/ReadClienteUseCase</a> ReadClientesUseCase.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">useCases/ReadClienteUseCase</a> ReadClientsUseCase.ts</h1>
         <div class='clearfix'>
-            
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
                 <span class='fraction'>19/19</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
                 <span class='fraction'>3/3</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
                 <span class='fraction'>2/2</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
                 <span class='fraction'>19/19</span>
             </div>
-        
-            
+
+
         </div>
         <p class="quiet">
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
@@ -102,24 +102,24 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { type Clientes } from "../../database/entities/Clientes";
-import { type IClienteRepository } from "../../repositories/IClientesRepository";
+import { type IClientsRepository } from "../../repositories/IClientesRepository";
 &nbsp;
-class ReadClientesUseCase {
-    private readonly clienteRepository: IClienteRepository;
+class ReadClientsUseCase {
+    private readonly clientsRepository: IClientsRepository;
 &nbsp;
-    constructor(clienteRepository: IClienteRepository) {
-        this.clienteRepository = clienteRepository;
+    constructor(clientsRepository: IClientsRepository) {
+        this.clientsRepository = clientsRepository;
     }
 &nbsp;
     async execute({ name }: { name?: string }): Promise&lt;Clientes[] | Clientes&gt; {
-        const clientes = await this.clienteRepository.findLike({
+        const clientes = await this.clientsRepository.findLike({
             name,
         });
         return clientes;
     }
 }
 &nbsp;
-export { ReadClientesUseCase };
+export { ReadClientsUseCase };
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -139,4 +139,3 @@ export { ReadClientesUseCase };
         <script src="../../block-navigation.js"></script>
     </body>
 </html>
-    

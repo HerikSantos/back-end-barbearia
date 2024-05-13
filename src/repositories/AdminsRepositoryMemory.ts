@@ -84,7 +84,7 @@ class AdminsRepositoryMemory implements IAdminsRepository {
         return admin;
     }
 
-    async findAll(): Promise<Admins[] | Admins> {
+    async findAll(): Promise<Admins[]> {
         return this.repositoryMemory;
     }
 }

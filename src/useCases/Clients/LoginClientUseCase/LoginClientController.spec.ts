@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { type Request, type Response } from "express";
 
-import { ClienteRepositoryMemory } from "../../../repositories/ClienteRepositoryMemory";
+import { ClientsRepositoryMemory } from "../../../repositories/ClientsRepositoryMemory";
 import { LoginClientController } from "./LoginClientController";
 import { LoginClientUseCase } from "./LoginClientUseCase";
 
-let clientRepositoryMemory: ClienteRepositoryMemory;
+let clientRepositoryMemory: ClientsRepositoryMemory;
 let loginClientController: LoginClientController;
 let loginClientUseCase: LoginClientUseCase;
 
 describe("Login client", () => {
     beforeEach(() => {
-        clientRepositoryMemory = new ClienteRepositoryMemory();
+        clientRepositoryMemory = new ClientsRepositoryMemory();
         loginClientUseCase = new LoginClientUseCase(clientRepositoryMemory);
         loginClientController = new LoginClientController(loginClientUseCase);
     });

@@ -1,41 +1,48 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router } from "express";
 
-import { createClienteUseCase } from "../useCases/Clients/CreateClienteUseCase";
-import { CreateClienteController } from "../useCases/Clients/CreateClienteUseCase/CreateClienteController";
+import { auth } from "../middleware/authenticateMiddleware";
+import { createClientUseCase } from "../useCases/Clients/CreateClientUseCase";
+import { CreateClienteController } from "../useCases/Clients/CreateClientUseCase/CreateClientController";
 import { deleteClienteUseCase } from "../useCases/Clients/DeleteClientUseCase";
 import { DeleteClientController } from "../useCases/Clients/DeleteClientUseCase/DeleteClientController";
-import { readClientesUseCase } from "../useCases/Clients/ReadClienteUseCase";
-import { ReadClientesController } from "../useCases/Clients/ReadClienteUseCase/ReadClientesController";
-import { updateClienteUseCase } from "../useCases/Clients/UpdateClienteUseCase";
-import { UpdateClienteController } from "../useCases/Clients/UpdateClienteUseCase/UpdateClienteController";
+import { loginClientUseCase } from "../useCases/Clients/LoginClientUseCase";
+import { LoginClientController } from "../useCases/Clients/LoginClientUseCase/LoginClientController";
+import { readClientesUseCase } from "../useCases/Clients/ReadClientsUseCase";
+import { ReadClientsController } from "../useCases/Clients/ReadClientsUseCase/ReadClientsController";
+import { updateClientUseCase } from "../useCases/Clients/UpdateClientUseCase";
+import { UpdateClientController } from "../useCases/Clients/UpdateClientUseCase/UpdateClientController";
 
 const route = Router();
 const createClienteController = new CreateClienteController(
-    createClienteUseCase,
+    createClientUseCase,
 );
-const updateClienteController = new UpdateClienteController(
-    updateClienteUseCase,
-);
+const updateClientController = new UpdateClientController(updateClientUseCase);
 
-const readClientesController = new ReadClientesController(readClientesUseCase);
+const readClientsController = new ReadClientsController(readClientesUseCase);
 
 const deleteClientController = new DeleteClientController(deleteClienteUseCase);
 
-route.post("/clientes", async (request, response) => {
+const loginClientController = new LoginClientController(loginClientUseCase);
+
+route.post("/clientes", auth, async (request, response) => {
     await createClienteController.handle(request, response);
 });
 
-route.put("/clientes/:id", async (request, response) => {
-    await updateClienteController.handle(request, response);
+route.put("/clientes/:id", auth, async (request, response) => {
+    await updateClientController.handle(request, response);
 });
 
-route.get("/clientes", async (request, response) => {
-    await readClientesController.handle(request, response);
+route.get("/clientes", auth, async (request, response) => {
+    await readClientsController.handle(request, response);
 });
 
-route.delete("/clientes", async (request, response) => {
+route.delete("/clientes/:id", auth, async (request, response) => {
     await deleteClientController.handle(request, response);
+});
+
+route.post("/clientes/login", async (request, response) => {
+    await loginClientController.handle(request, response);
 });
 
 export { route };

@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { type Response, type Request } from "express";
 
-import { ClienteRepositoryMemory } from "../../../repositories/ClienteRepositoryMemory";
+import { ClientsRepositoryMemory } from "../../../repositories/ClientsRepositoryMemory";
 import { DeleteClientController } from "./DeleteClientController";
 import { DeleteClientUseCase } from "./DeleteClientUseCase";
 
-let clienteRepositoryMemory: ClienteRepositoryMemory;
+let clientsRepositoryMemory: ClientsRepositoryMemory;
 let deleteClientController: DeleteClientController;
 let deleteClientUseCase: DeleteClientUseCase;
 
 describe("Delete client", () => {
     beforeEach(() => {
-        clienteRepositoryMemory = new ClienteRepositoryMemory();
-        deleteClientUseCase = new DeleteClientUseCase(clienteRepositoryMemory);
+        clientsRepositoryMemory = new ClientsRepositoryMemory();
+        deleteClientUseCase = new DeleteClientUseCase(clientsRepositoryMemory);
         deleteClientController = new DeleteClientController(
             deleteClientUseCase,
         );
@@ -32,9 +32,9 @@ describe("Delete client", () => {
         mockResponse.status = jest.fn().mockReturnThis();
         mockResponse.send = jest.fn();
 
-        await clienteRepositoryMemory.create(client);
+        await clientsRepositoryMemory.create(client);
 
-        const createdClient = await clienteRepositoryMemory.findOne(client);
+        const createdClient = await clientsRepositoryMemory.findOne(client);
 
         if (createdClient) {
             mockRequest.params = {

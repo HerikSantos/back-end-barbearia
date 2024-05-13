@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for useCases/UpdateClienteUseCase/UpdateClienteUseCase.ts</title>
+    <title>Code coverage report for useCases/UpdateClientUseCase/UpdateClientUseCase.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -15,41 +15,41 @@
         }
     </style>
 </head>
-    
+
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">useCases/UpdateClienteUseCase</a> UpdateClienteUseCase.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">useCases/UpdateClientUseCase</a> UpdateClientUseCase.ts</h1>
         <div class='clearfix'>
-            
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
                 <span class='fraction'>37/37</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
                 <span class='fraction'>3/4</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
                 <span class='fraction'>2/2</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
                 <span class='fraction'>37/37</span>
             </div>
-        
-            
+
+
         </div>
         <p class="quiet">
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
@@ -139,7 +139,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { type Clientes } from "../../database/entities/Clientes";
 import { AppError } from "../../errors/AppErros";
-import { type IClienteRepository } from "../../repositories/IClientesRepository";
+import { type IClientsRepository } from "../../repositories/IClientesRepository";
 &nbsp;
 interface IRequest {
     id: string;
@@ -148,11 +148,11 @@ interface IRequest {
     qtd_cortes?: number;
 }
 &nbsp;
-class UpdateClienteUseCase {
-    private readonly clienteRepository: IClienteRepository;
+class UpdateClientUseCase {
+    private readonly clientsRepository: IClientsRepository;
 &nbsp;
-    constructor(clienteRepository: IClienteRepository) {
-        this.clienteRepository = clienteRepository;
+    constructor(clientsRepository: IClientsRepository) {
+        this.clientsRepository = clientsRepository;
     }
 &nbsp;
     async execute({
@@ -161,7 +161,7 @@ class UpdateClienteUseCase {
         data_nasc,
         qtd_cortes,
     }: IRequest): Promise&lt;Clientes&gt; {
-        const newClient = await this.clienteRepository.edit({
+        const newClient = await this.clientsRepository.edit({
             id,
             name,
             data_nasc,
@@ -173,7 +173,7 @@ class UpdateClienteUseCase {
     }
 }
 &nbsp;
-export { UpdateClienteUseCase };
+export { UpdateClientUseCase };
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -193,4 +193,3 @@ export { UpdateClienteUseCase };
         <script src="../../block-navigation.js"></script>
     </body>
 </html>
-    

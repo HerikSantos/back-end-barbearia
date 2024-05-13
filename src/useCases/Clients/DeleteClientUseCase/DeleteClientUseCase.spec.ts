@@ -1,14 +1,14 @@
 import { AppError } from "../../../errors/AppErros";
-import { ClienteRepositoryMemory } from "../../../repositories/ClienteRepositoryMemory";
+import { ClientsRepositoryMemory } from "../../../repositories/ClientsRepositoryMemory";
 import { DeleteClientUseCase } from "./DeleteClientUseCase";
 
 let deleteClientUseCase: DeleteClientUseCase;
-let clienteRepositoryMemory: ClienteRepositoryMemory;
+let clientsRepositoryMemory: ClientsRepositoryMemory;
 
 describe("Delete client", () => {
     beforeEach(() => {
-        clienteRepositoryMemory = new ClienteRepositoryMemory();
-        deleteClientUseCase = new DeleteClientUseCase(clienteRepositoryMemory);
+        clientsRepositoryMemory = new ClientsRepositoryMemory();
+        deleteClientUseCase = new DeleteClientUseCase(clientsRepositoryMemory);
     });
 
     it("Should be possible delete an exists client", async () => {
@@ -18,9 +18,9 @@ describe("Delete client", () => {
             qtd_cortes: 2,
         };
 
-        await clienteRepositoryMemory.create(client);
+        await clientsRepositoryMemory.create(client);
 
-        const createdClient = await clienteRepositoryMemory.findOne({
+        const createdClient = await clientsRepositoryMemory.findOne({
             name: client.name,
             data_nasc: client.data_nasc,
         });
@@ -30,7 +30,7 @@ describe("Delete client", () => {
         await deleteClientUseCase.execute(createdClient.id);
 
         const deletedClient =
-            await clienteRepositoryMemory.findOne(createdClient);
+            await clientsRepositoryMemory.findOne(createdClient);
 
         expect(deletedClient).toBeNull();
     });
@@ -43,9 +43,9 @@ describe("Delete client", () => {
                 qtd_cortes: 2,
             };
 
-            await clienteRepositoryMemory.create(client);
+            await clientsRepositoryMemory.create(client);
 
-            const createdClient = await clienteRepositoryMemory.findOne({
+            const createdClient = await clientsRepositoryMemory.findOne({
                 name: "Joao",
                 data_nasc: client.data_nasc,
             });

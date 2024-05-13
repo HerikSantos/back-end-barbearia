@@ -1,9 +1,9 @@
 import { AppError } from "../../../errors/AppErros";
-import { type IClienteRepository } from "../../../repositories/IClientesRepository";
+import { type IClientsRepository } from "../../../repositories/IClientsRepository";
 
 class DeleteClientUseCase {
-    private readonly clientRepository: IClienteRepository;
-    constructor(clientRepository: IClienteRepository) {
+    private readonly clientRepository: IClientsRepository;
+    constructor(clientRepository: IClientsRepository) {
         this.clientRepository = clientRepository;
     }
 

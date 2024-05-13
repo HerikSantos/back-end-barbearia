@@ -3,9 +3,10 @@ import jwt from "jsonwebtoken";
 import path from "path";
 
 import { AppError } from "../../../errors/AppErros";
-import { type IClienteRepository } from "../../../repositories/IClientesRepository";
+import { type IClientsRepository } from "../../../repositories/IClientsRepository";
 
 interface IClientToken {
+    id: string;
     name: string;
     data_nasc: Date;
     token?: string;
@@ -16,8 +17,8 @@ dotenv.config({
 });
 
 class LoginClientUseCase {
-    private readonly clientRepository: IClienteRepository;
-    constructor(clientRepository: IClienteRepository) {
+    private readonly clientRepository: IClientsRepository;
+    constructor(clientRepository: IClientsRepository) {
         this.clientRepository = clientRepository;
     }
 
@@ -33,6 +34,7 @@ class LoginClientUseCase {
         if (!client) throw new AppError("Client not found");
 
         const tokenClient: IClientToken = {
+            id: client.id,
             name: client.name,
             data_nasc: client.data_nasc,
         };

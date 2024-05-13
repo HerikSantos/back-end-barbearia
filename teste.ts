@@ -1,6 +1,7 @@
-const tokenP = null;
-console.log(tokenP);
+import { removeTimeZone } from "./src/utils/removeTimeZone";
 
-if (tokenP) console.log("aaaaa");
+const a = new Date("2001-04-26");
 
-console.log(tokenP);
+const b = removeTimeZone(a);
+
+console.log(b);

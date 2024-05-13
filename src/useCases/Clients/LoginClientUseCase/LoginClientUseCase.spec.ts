@@ -1,13 +1,13 @@
 import { AppError } from "../../../errors/AppErros";
-import { ClienteRepositoryMemory } from "../../../repositories/ClienteRepositoryMemory";
+import { ClientsRepositoryMemory } from "../../../repositories/ClientsRepositoryMemory";
 import { LoginClientUseCase } from "./LoginClientUseCase";
 
-let clientRepositoryMemory: ClienteRepositoryMemory;
+let clientRepositoryMemory: ClientsRepositoryMemory;
 let loginClientUseCase: LoginClientUseCase;
 
 describe("Login client", () => {
     beforeEach(() => {
-        clientRepositoryMemory = new ClienteRepositoryMemory();
+        clientRepositoryMemory = new ClientsRepositoryMemory();
         loginClientUseCase = new LoginClientUseCase(clientRepositoryMemory);
     });
 

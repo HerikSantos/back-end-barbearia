@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for useCases/CreateClienteUseCase/CreateClienteUseCase.ts</title>
+    <title>Code coverage report for useCases/CreateClientUseCase/CreateClientUseCase.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -15,41 +15,41 @@
         }
     </style>
 </head>
-    
+
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">useCases/CreateClienteUseCase</a> CreateClienteUseCase.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">useCases/CreateClientUseCase</a> CreateClientUseCase.ts</h1>
         <div class='clearfix'>
-            
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
                 <span class='fraction'>29/29</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">83.33% </span>
                 <span class="quiet">Branches</span>
                 <span class='fraction'>5/6</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
                 <span class='fraction'>2/2</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
                 <span class='fraction'>29/29</span>
             </div>
-        
-            
+
+
         </div>
         <p class="quiet">
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
@@ -123,33 +123,33 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { AppError } from "../../errors/AppErros";
 import {
-    type IClienteRepository,
+    type IClientsRepository,
     type IRequest,
 } from "../../repositories/IClientesRepository";
 &nbsp;
-class CreateClienteUseCase {
-    private readonly clienteRepository: IClienteRepository;
+class CreateClientUseCase {
+    private readonly clientsRepository: IClientsRepository;
 &nbsp;
-    constructor(clienteRepository: IClienteRepository) {
-        this.clienteRepository = clienteRepository;
+    constructor(clientsRepository: IClientsRepository) {
+        this.clientsRepository = clientsRepository;
     }
 &nbsp;
     async execute({ name, data_nasc, qtd_cortes }: IRequest): Promise&lt;void&gt; {
         if (!data_nasc || !name || !qtd_cortes)
 <span class="branch-0 cbranch-no" title="branch not covered" >            throw new AppError("Missing data", 400);</span>
 &nbsp;
-        const clintExists = await this.clienteRepository.findOne({
+        const clintExists = await this.clientsRepository.findOne({
             name,
             data_nasc,
         });
 &nbsp;
         if (clintExists) throw new AppError("Client already exists", 400);
 &nbsp;
-        await this.clienteRepository.create({ name, data_nasc, qtd_cortes });
+        await this.clientsRepository.create({ name, data_nasc, qtd_cortes });
     }
 }
 &nbsp;
-export { CreateClienteUseCase };
+export { CreateClientUseCase };
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -169,4 +169,3 @@ export { CreateClienteUseCase };
         <script src="../../block-navigation.js"></script>
     </body>
 </html>
-    
