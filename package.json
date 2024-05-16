@@ -7,7 +7,8 @@
     "test": "jest ",
     "start": "node dist/index.js",
     "dev": " ts-node-dev  --inspect --ignore-watch node_modules src/server.ts",
-    "typeorm": " ts-node-dev ./node_modules/typeorm/cli"
+    "typeorm": " ts-node-dev ./node_modules/typeorm/cli",
+    "build": "NODE_ENV=prod tsc --experimentalDecorators --emitDecoratorMetadata"
   },
   "keywords": [],
   "author": "",
