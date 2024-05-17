@@ -6,6 +6,8 @@ dotenv.config({
     path: path.resolve(__dirname, "..", "..", ".env.dev"),
 });
 
+console.log(process.env.NODE_ENV);
+
 const appDataSource = new DataSource({
     type: "mysql",
     host: process.env.DATABASE_HOST,
@@ -15,9 +17,17 @@ const appDataSource = new DataSource({
     password: process.env.DATABASE_PASSWORD,
     synchronize: true,
     logging: true,
-    entities: ["./src/database/entities/*.ts"],
+    entities: [
+        process.env.NODE_ENV
+            ? "./dist/database/entities/*.js"
+            : "./src/database/entities/*.ts",
+    ],
     subscribers: [],
-    migrations: ["./src/database/migrations/*.ts"],
+    migrations: [
+        process.env.NODE_ENV
+            ? "./dist/database/migrations/*.js"
+            : "./src/database/migrations/*.ts",
+    ],
 });
 
 export { appDataSource };

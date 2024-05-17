@@ -8,4 +8,6 @@ appDataSource
             console.log("rodando na porta 3333");
         }),
     )
-    .catch((err) => `Algo deu errado com o banco de dados ${err}`);
+    .catch((err: Error) => {
+        console.log(`Algo deu errado com o banco de dados ${err.stack}`);
+    });
