@@ -25,23 +25,23 @@ const deleteClientController = new DeleteClientController(deleteClienteUseCase);
 
 const loginClientController = new LoginClientController(loginClientUseCase);
 
-route.post("/clientes", auth, async (request, response) => {
+route.post("/clients", auth, async (request, response) => {
     await createClienteController.handle(request, response);
 });
 
-route.put("/clientes/:id", async (request, response) => {
+route.put("/clients/:id", async (request, response) => {
     await updateClientController.handle(request, response);
 });
 
-route.get("/clientes", auth, async (request, response) => {
+route.get("/clients", auth, async (request, response) => {
     await readClientsController.handle(request, response);
 });
 
-route.delete("/clientes/:id", auth, async (request, response) => {
+route.delete("/clients/:id", auth, async (request, response) => {
     await deleteClientController.handle(request, response);
 });
 
-route.post("/clientes/login", async (request, response) => {
+route.post("/clients/login", async (request, response) => {
     await loginClientController.handle(request, response);
 });
 
