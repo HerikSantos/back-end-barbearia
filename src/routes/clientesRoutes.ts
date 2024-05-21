@@ -29,7 +29,7 @@ route.post("/clientes", auth, async (request, response) => {
     await createClienteController.handle(request, response);
 });
 
-route.put("/clientes/:id", auth, async (request, response) => {
+route.put("/clientes/:id", async (request, response) => {
     await updateClientController.handle(request, response);
 });
 
