@@ -26,14 +26,14 @@ class UpdateAdminUseCase {
             password = await cryptPassword(password);
         }
 
-        if (!email) throw new AppError("Email is not valid", 400);
+        if (email) {
+            if (!validator.isEmail(email))
+                throw new AppError("Email is not valid", 400);
+        }
 
-        if (!validator.isEmail(email))
-            throw new AppError("Email is not valid", 400);
+        const existedAdmin = await this.adminsRepository.findByID(id);
 
-        const existedAdmin = await this.adminsRepository.findOne({ email });
-
-        if (existedAdmin) throw new AppError("Email is not valid", 400);
+        if (!existedAdmin) throw new AppError("Email is not valid", 400);
 
         const editedAdmin = await this.adminsRepository.edit({
             id,
