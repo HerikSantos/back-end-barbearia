@@ -1,0 +1,2 @@
+## Consertar o retorno do put, ele deve retorna o usuário completo sem as datas
+## O token do client ta dando permissão pra fazer alteração, o token do client é somente para auth

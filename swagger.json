@@ -1,0 +1,212 @@
+{
+    "openapi": "3.0.0",
+
+    "info": {
+        "title": "API Barbearia",
+        "description": "Uma api onde é possível cadastrar clientes e salvar seus cortes de cabelos para um sistema de fidelidade",
+        "version": "1.0.0",
+        "contact": {
+            "email": "heriksantos04@gmail.com"
+        }
+
+    },
+
+    "paths": {
+        "/clients": {
+            "post": {
+                "tags": ["Clients"],
+                "summary": "Create a new client",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Client"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Ok"
+                    },
+                    "400": {
+                        "description": "Client already exists"
+                    },
+                    "401": {
+                        "description": "Token is required"
+                    }
+
+                },
+                "security": [{
+                    "JWT_Bearer": []
+                }]
+            },
+            "get": {
+                "tags": ["Clients"],
+                "summary": "Return a list of clients",
+                "responses": {
+                    "200": {
+                        "description": "Return an array that contain all clients",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                            "id": {
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "data_nasc": {
+                                                "type": "string"
+                                            },
+                                            "qtd_cortes": {
+                                                "type": "number",
+                                            "default": 2
+                                            },
+                                            "createdAt": {
+                                                "type": "string"
+                                            },
+                                            "updateAt": {
+                                                "type": "string"
+                                            }
+
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token is required"
+                    }
+                },
+                "security": [{
+                    "JWT_Bearer": []
+                }]
+            }
+
+        },
+        "/clients/{clientId}": {
+            "put": {
+                "tags": ["Clients"],
+                "summary": "Update a client",
+                "description": "Update a client that passed with params",
+                "responses": {
+                    "200": {
+                        "description": "Return a edited client",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Client"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Client not found"
+                    }
+                },
+                "parameters": [ {
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of client to update ",
+                    "required": true
+                }],
+                "security": [{
+                    "JWT_Bearer": []
+                }]
+            },
+            "delete": {
+                "tags": ["Clients"],
+                "summary": "Delete a client",
+                "description": "Delete a client that passed with params",
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "400": {
+                        "description": "Client not found"
+                    }
+                },
+                "parameters": [ {
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of client to delete ",
+                    "required": true
+                }],
+                "security": [{
+                    "JWT_Bearer": []
+                }]
+            }
+        },
+        "/clients/login": {
+            "post": {
+                "tags": ["Clients"],
+                "summary": "Login client",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "data_nasc": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "name": "Herik Santos",
+                                    "data_nasc": "2001-04-26"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "400": {
+                        "description": "Username is incorrect"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Client": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "data_nasc": {
+                        "type": "string"
+                    },
+                    "qtd_cortes": {
+                        "type": "number",
+                    "default": 2
+                    }
+                },
+                "example": {
+                    "name": "Herik Santos",
+                    "data_nasc": "2001-04-26",
+                    "qtd_cortes": 2
+                }
+
+            }
+        },
+        "securitySchemes": {
+            "JWT_Bearer": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}

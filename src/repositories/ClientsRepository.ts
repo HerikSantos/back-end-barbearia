@@ -66,7 +66,11 @@ class ClientsRepository implements IClientsRepository {
 
         const newClient = await this.repository.save(cliente);
 
-        return newClient;
+        const result = await this.repository.findOne({
+            where: { id: newClient.id },
+        });
+
+        return result;
     }
 
     async delete(id: string): Promise<void> {
@@ -90,7 +94,7 @@ class ClientsRepository implements IClientsRepository {
     }: {
         name?: string;
         data_nasc?: Date;
-    }): Promise<Clientes[] | Clientes> {
+    }): Promise<Clientes[]> {
         const client: Clientes[] = await this.repository
             .createQueryBuilder()
             .select("*")

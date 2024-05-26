@@ -8,11 +8,27 @@ class ReadClientsUseCase {
         this.clientsRepository = clientsRepository;
     }
 
-    async execute({ name }: { name?: string }): Promise<Clientes[] | Clientes> {
-        const clientes = await this.clientsRepository.findLike({
+    async execute({ name }: { name?: string }): Promise<Clientes[]> {
+        const clients = await this.clientsRepository.findLike({
             name,
         });
-        return clientes;
+
+        const clientsFormated = clients.map((client) => {
+            const result = {} as {
+                id: string;
+                name: string;
+                data_nasc: Date;
+                qtd_cortes: number;
+            };
+
+            result.id = client.id;
+            (result.name = client.name),
+                (result.data_nasc = client.data_nasc),
+                (result.qtd_cortes = client.qtd_cortes);
+
+            return result;
+        });
+        return clientsFormated;
     }
 }
 

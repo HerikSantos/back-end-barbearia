@@ -32,7 +32,14 @@ class UpdateClientUseCase {
         });
         if (!newClient) throw new AppError("Client not found", 400);
 
-        return newClient;
+        const result = {
+            id: newClient.id,
+            name: newClient.name,
+            data_nasc: newClient.data_nasc,
+            qtd_cortes: newClient.qtd_cortes,
+        };
+
+        return result;
     }
 }
 

@@ -31,7 +31,7 @@ class LoginClientUseCase {
     }): Promise<IClientToken> {
         const client = await this.clientRepository.findOne({ name, data_nasc });
 
-        if (!client) throw new AppError("Client not found");
+        if (!client) throw new AppError("Username is incorrect");
 
         const tokenClient: IClientToken = {
             id: client.id,

@@ -86,11 +86,7 @@ class ClientsRepositoryMemory implements IClientsRepository {
         return client;
     }
 
-    async findLike({
-        name,
-    }: {
-        name?: string;
-    }): Promise<Clientes[] | Clientes> {
+    async findLike({ name }: { name?: string }): Promise<Clientes[]> {
         return this.repositoryMemory;
     }
 }

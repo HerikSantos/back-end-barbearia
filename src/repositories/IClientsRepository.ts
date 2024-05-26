@@ -9,7 +9,7 @@ interface IRequest {
 
 interface IClientsRepository {
     create: ({ data_nasc, name, qtd_cortes }: IRequest) => Promise<void>;
-    findLike: ({ name }: { name?: string }) => Promise<Clientes[] | Clientes>;
+    findLike: ({ name }: { name?: string }) => Promise<Clientes[]>;
     edit: ({
         id,
         name,

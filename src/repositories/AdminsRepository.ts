@@ -61,7 +61,11 @@ class AdminsRepository implements IAdminsRepository {
 
         const editedAdmin = await this.repository.save(admin);
 
-        return editedAdmin;
+        const result = await this.repository.findOne({
+            where: { id: editedAdmin.id },
+        });
+
+        return result;
     }
 
     async delete(id: string): Promise<void> {
