@@ -175,7 +175,205 @@
                     }
                 }
             }
+        },
+        "/admin": {
+            "post": {
+                "tags": ["Admin"],
+                "summary": "Create a new admin",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Admin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Ok"
+                    },
+                    "400": {
+                        "description": "Email is not valid"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Admin"],
+                "summary": "Return list of  admins",
+                "responses": {
+                    "200": {
+                        "description": "Return an array that contain all admins",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                            "id": {
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "email": {
+                                                "type": "string"
+                                            },
+                                            "createdAt": {
+                                                "type": "string"
+                                            },
+                                            "updateAt": {
+                                                "type": "string"
+                                            }
+
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token is required"
+                    }
+            },
+            "security": [{
+                "JWT_Bearer": []
+            }]
         }
+    },
+    "/admin/{adminId}": {
+        "put": {
+            "tags": ["Admin"],
+            "summary": "Update a admin",
+            "description": "Update a admin that passed with params",
+            "responses": {
+                "200": {
+                    "description": "Return a edited admin",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Admin"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "admin not found"
+                }
+            },
+            "parameters": [ {
+                "name": "id",
+                "in": "path",
+                "description": "ID of admin to update ",
+                "required": true
+            }],
+            "security": [{
+                "JWT_Bearer": []
+            }]
+        },
+        "delete": {
+            "tags": ["Admin"],
+            "summary": "Delete a admin",
+            "description": "Delete a admin that passed with params",
+            "responses": {
+                "200": {
+                    "description": "Ok"
+                },
+                "400": {
+                    "description": "admin not found"
+                }
+            },
+            "parameters": [ {
+                "name": "id",
+                "in": "path",
+                "description": "ID of admin to delete ",
+                "required": true
+            }],
+            "security": [{
+                "JWT_Bearer": []
+            }]
+        }
+    },
+    "/admin/login": {
+        "post": {
+            "tags": ["Admin"],
+            "summary": "Login admin",
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "email": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                }
+                            },
+                            "example": {
+                                "email": "heriksantos04@gmail.com",
+                                "password": "anypassword"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Return a edited admin",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "token": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Password or email is not valid"
+                }
+            }
+        }
+    },
+    "/token": {
+        "post": {
+            "tags": ["Token"],
+            "summary": "Verify token",
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "token": {
+                                    "type": "string"
+                                }
+                            },
+                            "example": {
+                                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsImV4cCI6MTY1Njk2Nzg4Mn0.rJL2P0K1B1Fq-d4iK-N9cXW9A_bP9K_j3ZQomUlzVhs"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "boolean"
+                }
+            }
+        }
+    }
     },
     "components": {
         "schemas": {
@@ -199,6 +397,25 @@
                     "qtd_cortes": 2
                 }
 
+            },
+            "Admin": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "name": "Herik Santos",
+                    "email": "heriksantos04@gmail.com",
+                    "password": "anypassword"
+                }
             }
         },
         "securitySchemes": {
@@ -208,5 +425,6 @@
                 "bearerFormat": "JWT"
             }
         }
+
     }
 }

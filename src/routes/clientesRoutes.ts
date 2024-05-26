@@ -33,7 +33,7 @@ route.put("/clients/:id", auth, async (request, response) => {
     await updateClientController.handle(request, response);
 });
 
-route.get("/clients", auth, async (request, response) => {
+route.get("/clients", async (request, response) => {
     await readClientsController.handle(request, response);
 });
 
