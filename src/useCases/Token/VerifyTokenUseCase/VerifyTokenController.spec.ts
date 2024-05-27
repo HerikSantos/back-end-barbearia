@@ -90,8 +90,6 @@ describe("Veirify token", () => {
 
         const token = jwt.sign(admin, process.env.JWT_SECRET);
 
-        console.log(token);
-
         mockRequest.body = { token };
 
         await verifyTokenController.handle(mockRequest, mockResponse);

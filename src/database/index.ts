@@ -6,8 +6,6 @@ dotenv.config({
     path: path.resolve(__dirname, "..", "..", ".env.dev"),
 });
 
-console.log(process.env.NODE_ENV);
-
 const appDataSource = new DataSource({
     type: "mysql",
     host: process.env.DATABASE_HOST,
