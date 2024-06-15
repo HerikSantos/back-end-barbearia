@@ -1,6 +1,6 @@
 # Sistema de Fidelidade
 
-Um sistema de fidelidade feito para um barbearia, onde vc pode cadastrar seus clientes e adicionar seus cortes de cabelo. 
+Um sistema de fidelidade feito para um barbearia, onde vc pode cadastrar seus clientes e adicionar seus cortes de cabelo.
 
 ## 🚀 Sobre
 
@@ -56,7 +56,6 @@ Usei Nginx para o proxy reverso, usei PM2 para manter a aplicação sempre funci
 
 ## 🛠️ Construído com
 
-Mencione as ferramentas que você usou para criar seu projeto
 
 * [TypeScript(JavaScript)] - A linguagem usada
 * [Express] - O framework web usado
