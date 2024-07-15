@@ -105,11 +105,15 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
-  "exclude": [
-    "node_modules",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "jest.config.ts"
-  ]
+
+//   "include": [
+
+//   ],
+//   "exclude": [
+//     "node_modules",
+//     "**/*.test.ts",
+//     "**/*.spec.ts",
+//     "jest.config.ts"
+//   ]
 
 }
