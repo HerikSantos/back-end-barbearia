@@ -1,52 +1,140 @@
-import { AppError } from "../../../errors/AppErros";
+import validator from "validator";
+
 import { AdminsRepositoryMemory } from "../../../repositories/AdminsRepositoryMemory";
+import { cryptPassword } from "../../../utils/cryptPassword";
 import { CreateAdminUseCase } from "./CreateAdminUseCase";
 
-let createAdminUseCase: CreateAdminUseCase;
-let adminsRepository: AdminsRepositoryMemory;
+interface ISutTypes {
+    sut: CreateAdminUseCase;
+    adminsRepository: AdminsRepositoryMemory;
+}
+
+function makeSut(): ISutTypes {
+    const adminsRepository = new AdminsRepositoryMemory();
+    const sut = new CreateAdminUseCase(adminsRepository);
+
+    return {
+        adminsRepository,
+        sut,
+    };
+}
+
+jest.mock("validator", () => ({
+    isEmail: () => true,
+}));
+
+jest.mock("../../../utils/cryptPassword", () => ({
+    cryptPassword: jest.fn(),
+}));
 
 describe("Create a new admin", () => {
-    beforeEach(() => {
-        adminsRepository = new AdminsRepositoryMemory();
-        createAdminUseCase = new CreateAdminUseCase(adminsRepository);
-    });
-
     it("Should be alble create a admin", async () => {
+        const { sut, adminsRepository } = makeSut();
+
         const admin = {
             name: "teste da silva",
             email: "testando@gmail.com",
             password: "teste",
         };
-        await createAdminUseCase.execute(admin);
+        await sut.execute(admin);
 
         const createdAdmin = await adminsRepository.findOne(admin);
 
         expect(createdAdmin).toHaveProperty("id");
     });
 
-    it("Should be impossible create a admin with email invalid", async () => {
-        await expect(async () => {
-            const admin = {
-                name: "teste da silva",
-                email: "testando.com",
-                password: "teste",
-            };
+    it("Should call adminsRepository.findOne with correct params", async () => {
+        const { sut, adminsRepository } = makeSut();
 
-            await createAdminUseCase.execute(admin);
-        }).rejects.toBeInstanceOf(AppError);
+        const admin = {
+            name: "teste da silva",
+            email: "testando@gmail.com",
+            password: "teste",
+        };
+
+        const adminsRepositorySpy = jest.spyOn(adminsRepository, "findOne");
+
+        await sut.execute(admin);
+
+        expect(adminsRepositorySpy).toHaveBeenCalledWith({
+            email: admin.email,
+        });
+    });
+
+    it("Should call adminsRepository.create with correct params", async () => {
+        const { sut, adminsRepository } = makeSut();
+
+        const admin = {
+            name: "teste da silva",
+            email: "testando@gmail.com",
+            password: "teste",
+        };
+
+        (cryptPassword as jest.Mock).mockImplementationOnce(
+            () => "hashed_password",
+        );
+
+        const adminsRepositorySpy = jest.spyOn(adminsRepository, "create");
+
+        await sut.execute(admin);
+
+        expect(adminsRepositorySpy).toHaveBeenCalledWith({
+            ...admin,
+            password: "hashed_password",
+        });
+    });
+
+    it("Should call cryptPassword with correct params", async () => {
+        const { sut } = makeSut();
+
+        const admin = {
+            name: "teste da silva",
+            email: "testando@gmail.com",
+            password: "teste",
+        };
+
+        const cryptPasswordMock = cryptPassword as jest.Mock;
+
+        await sut.execute(admin);
+
+        expect(cryptPasswordMock).toHaveBeenCalledWith(admin.password);
+    });
+
+    it("Should be impossible create a admin with invalid email", async () => {
+        const { sut } = makeSut();
+
+        jest.spyOn(validator, "isEmail").mockReturnValueOnce(false);
+
+        const admin = {
+            name: "teste da silva",
+            email: "testando.com",
+            password: "teste",
+        };
+
+        await expect(async () => {
+            await sut.execute(admin);
+        }).rejects.toMatchObject({
+            message: "Email is not valid",
+            statusCode: 400,
+        });
     });
 
     it("Should be impossible create a admin with email already exists", async () => {
+        const { sut } = makeSut();
+
+        const admin = {
+            name: "teste da silva",
+            email: "teste@gmail.com",
+            password: "teste",
+        };
+
+        await sut.execute(admin);
+
         await expect(async () => {
-            const admin = {
-                name: "teste da silva",
-                email: "teste@gmail.com",
-                password: "teste",
-            };
-
-            await createAdminUseCase.execute(admin);
-
-            await createAdminUseCase.execute(admin);
-        }).rejects.toBeInstanceOf(AppError);
+            await sut.execute(admin);
+        }).rejects.toMatchObject({
+            message: "Email is not valid",
+            statusCode: 400,
+        });
     });
 });
