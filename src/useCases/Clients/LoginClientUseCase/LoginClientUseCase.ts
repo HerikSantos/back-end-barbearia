@@ -1,9 +1,8 @@
-import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import path from "path";
 
 import { AppError } from "../../../errors/AppErros";
 import { type IClientsRepository } from "../../../repositories/IClientsRepository";
+import { env } from "../../../utils/enviroment";
 
 interface IClientToken {
     id: string;
@@ -11,10 +10,6 @@ interface IClientToken {
     data_nasc: Date;
     token?: string;
 }
-
-dotenv.config({
-    path: path.resolve(__dirname, "..", "..", "..", "..", ".env.dev"),
-});
 
 class LoginClientUseCase {
     private readonly clientRepository: IClientsRepository;
@@ -31,7 +26,9 @@ class LoginClientUseCase {
     }): Promise<IClientToken> {
         const client = await this.clientRepository.findOne({ name, data_nasc });
 
-        if (!client) throw new AppError("Username is incorrect");
+        if (!client) {
+            throw new AppError("Username is incorrect");
+        }
 
         const tokenClient: IClientToken = {
             id: client.id,
@@ -39,10 +36,7 @@ class LoginClientUseCase {
             data_nasc: client.data_nasc,
         };
 
-        if (!process.env.JWT_SECRET)
-            throw new Error("A key JWT_SECRET in dotenv is required ");
-
-        const token = jwt.sign(tokenClient, process.env.JWT_SECRET, {
+        const token = jwt.sign(tokenClient, env.JWT_SECRET, {
             expiresIn: "7D",
         });
 

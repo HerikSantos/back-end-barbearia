@@ -1,20 +1,12 @@
-import dotenv from "dotenv";
-import path from "path";
-
 import { app } from ".";
 import { appDataSource } from "./database";
-
-dotenv.config({
-    path: path.resolve("..", ".env.dev"),
-});
-
-const port = process.env.PORT;
+import { env } from "./utils/enviroment";
 
 appDataSource
     .initialize()
     .then(() =>
-        app.listen(port ?? 3333, () => {
-            console.log("rodando na porta " + port ?? 3333);
+        app.listen(env.PORT ?? 3333, () => {
+            console.log("rodando na porta " + env.PORT ?? 3333);
         }),
     )
     .catch((err: Error) => {

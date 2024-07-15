@@ -1,10 +1,9 @@
-import dotenv from "dotenv";
 import { type Request, type Response } from "express";
 import jwt from "jsonwebtoken";
-import path from "path";
 
 import { AppError } from "../../../errors/AppErros";
 import { AdminsRepositoryMemory } from "../../../repositories/AdminsRepositoryMemory";
+import { env } from "../../../utils/enviroment";
 import { CreateAdminUseCase } from "../../Admins/CreateAdminUseCase/CreateAdminUseCase";
 import { LoginAdminUseCase } from "../../Admins/LoginAdminUseCase/LoginAdminUseCase";
 import { VerifyTokenController } from "./VerifyTokenController";
@@ -61,18 +60,6 @@ describe("Veirify token", () => {
     });
 
     it("It should be impossible to verify the token of a nonexistent admin", async () => {
-        dotenv.config({
-            path: path.resolve(
-                __dirname,
-                "..",
-                "..",
-                "..",
-                "..",
-                "..",
-                ".env.dev",
-            ),
-        });
-
         const mockResponse = {} as Response;
         const mockRequest = {} as Request;
 
@@ -88,7 +75,7 @@ describe("Veirify token", () => {
         if (!process.env.JWT_SECRET)
             throw new AppError("A key JWT_SECRET in dotenv is required ");
 
-        const token = jwt.sign(admin, process.env.JWT_SECRET);
+        const token = jwt.sign(admin, env.JWT_SECRET);
 
         mockRequest.body = { token };
 
