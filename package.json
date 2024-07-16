@@ -8,7 +8,9 @@
     "start": "cross-env NODE_ENV=prod node dist/server.js",
     "dev": " ts-node-dev  --inspect --ignore-watch node_modules src/server.ts",
     "typeorm": " ts-node-dev ./node_modules/typeorm/cli",
-    "build": "tsc --experimentalDecorators --emitDecoratorMetadata"
+    "build": "tsc --experimentalDecorators --emitDecoratorMetadata",
+    "test:debug:dev": "node --inspect-brk --experimental-vm-modules node_modules/.bin/jest --runInBand --watch --onlyChanged",
+    "test:debug": "node --inspect-brk --experimental-vm-modules node_modules/.bin/jest --runInBand --watchAll"
   },
   "keywords": [],
   "author": "",

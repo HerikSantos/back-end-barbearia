@@ -1,62 +1,155 @@
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+
 import { AppError } from "../../../errors/AppErros";
 import { AdminsRepositoryMemory } from "../../../repositories/AdminsRepositoryMemory";
-import { CreateAdminUseCase } from "../CreateAdminUseCase/CreateAdminUseCase";
+import { type IAdminsRepository } from "../../../repositories/IAdminsRepository";
+import { env } from "../../../utils/enviroment";
 import { LoginAdminUseCase } from "./LoginAdminUseCase";
 
-let adminsRepository: AdminsRepositoryMemory;
-let loginAdminUseCase: LoginAdminUseCase;
-let createAdminUseCase: CreateAdminUseCase;
+interface ISutTypes {
+    sut: LoginAdminUseCase;
+    adminsRepository: IAdminsRepository;
+}
+
+function makeSut(): ISutTypes {
+    const adminsRepository = new AdminsRepositoryMemory();
+    const sut = new LoginAdminUseCase(adminsRepository);
+
+    return { adminsRepository, sut };
+}
+
+jest.mock("bcryptjs", () => ({
+    compare: () => true,
+}));
+
+jest.mock("jsonwebtoken", () => ({
+    sign: () => "token",
+}));
 
 describe("Login admin", () => {
-    beforeEach(() => {
-        adminsRepository = new AdminsRepositoryMemory();
-        loginAdminUseCase = new LoginAdminUseCase(adminsRepository);
-        createAdminUseCase = new CreateAdminUseCase(adminsRepository);
-    });
-
     it("Should be able login admin", async () => {
+        const { adminsRepository, sut } = makeSut();
+
         const admin = {
             email: "teste@gmail.com",
             name: "teste Almeida",
             password: "teste123",
         };
 
-        await createAdminUseCase.execute(admin);
+        jest.spyOn(bcrypt, "compare").mockImplementationOnce(() => true);
 
-        const adminToken = await loginAdminUseCase.execute(admin);
+        await adminsRepository.create(admin);
+
+        const adminToken = await sut.execute(admin);
 
         expect(adminToken).toHaveProperty("token");
+        expect(adminToken).toHaveProperty("id");
+        expect(adminToken.email).toEqual(admin.email);
+    });
+
+    it("Should call method findOne with correct params", async () => {
+        const { adminsRepository, sut } = makeSut();
+
+        const admin = {
+            email: "teste@gmail.com",
+            name: "teste Almeida",
+            password: "teste123",
+        };
+
+        const findOneSpy = jest
+            .spyOn(adminsRepository, "findOne")
+            .mockImplementationOnce(async () => ({ ...admin, id: "valid_id" }));
+
+        await sut.execute(admin);
+
+        expect(findOneSpy).toHaveBeenCalledWith({ email: admin.email });
+    });
+
+    it("Should call method bcryptjs compare with correct params", async () => {
+        const { adminsRepository, sut } = makeSut();
+
+        const admin = {
+            email: "teste@gmail.com",
+            name: "teste Almeida",
+            password: "teste123",
+        };
+        jest.spyOn(adminsRepository, "findOne").mockImplementationOnce(
+            async () => ({
+                ...admin,
+                id: "valid_id",
+                password: "hashed_password",
+            }),
+        );
+
+        const compareSpy = jest.spyOn(bcrypt, "compare");
+
+        await sut.execute(admin);
+
+        expect(compareSpy).toHaveBeenCalledWith(
+            admin.password,
+            "hashed_password",
+        );
+    });
+
+    it("Should call method jwt sign with correct params", async () => {
+        const { adminsRepository, sut } = makeSut();
+
+        const admin = {
+            email: "teste@gmail.com",
+            name: "teste Almeida",
+            password: "teste123",
+        };
+        jest.spyOn(adminsRepository, "findOne").mockImplementationOnce(
+            async () => ({
+                ...admin,
+                id: "valid_id",
+                password: "hashed_password",
+            }),
+        );
+
+        const jwtSpy = jest.spyOn(jwt, "sign");
+
+        await sut.execute(admin);
+
+        expect(jwtSpy).toHaveBeenCalledWith(
+            {
+                emailAdmin: admin.email,
+                id: "valid_id",
+            },
+            env.JWT_SECRET,
+        );
     });
 
     it("Should be impossible login with email or password incorrect", async () => {
-        await expect(async () => {
-            const admin = {
-                email: "teste@gmail.com",
-                name: "teste Almeida",
-                password: "teste123",
-            };
+        const { adminsRepository, sut } = makeSut();
 
-            await createAdminUseCase.execute(admin);
+        jest.restoreAllMocks();
 
-            await loginAdminUseCase.execute({
-                email: admin.email,
-                password: "dsadsadsa",
-            });
-        }).rejects.toBeInstanceOf(AppError);
+        const admin = {
+            email: "teste@gmail.com",
+            name: "teste Almeida",
+            password: "teste123",
+        };
 
-        await expect(async () => {
-            const admin = {
-                email: "teste@gmail.com",
-                name: "teste Almeida",
-                password: "teste123",
-            };
+        jest.spyOn(bcrypt, "compare").mockImplementationOnce(() => false);
 
-            await createAdminUseCase.execute(admin);
+        await adminsRepository.create(admin);
 
-            await loginAdminUseCase.execute({
-                email: "testeemail@gmail.com",
-                password: admin.password,
-            });
-        }).rejects.toBeInstanceOf(AppError);
+        await expect(
+            async () =>
+                await sut.execute({
+                    email: admin.email,
+                    password: "dsadsadsa",
+                }),
+        ).rejects.toEqual(new AppError("Password or email is not valid", 400));
+
+        await expect(
+            async () =>
+                await sut.execute({
+                    email: "testeemail@gmail.com",
+                    password: admin.password,
+                }),
+        ).rejects.toEqual(new AppError("Password or email is not valid", 400));
     });
 });
