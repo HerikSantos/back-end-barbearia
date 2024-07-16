@@ -1,13 +1,25 @@
-import { v4 as uuidv4 } from "uuid";
-
 import { AppError } from "../../../errors/AppErros";
 import { AdminsRepositoryMemory } from "../../../repositories/AdminsRepositoryMemory";
 import { DeleteAdminUseCase } from "./DeleteAdminUseCase";
 
+interface ISutTypes {
+    sut: DeleteAdminUseCase;
+    adminsRepository: AdminsRepositoryMemory;
+}
+
+function makeSut(): ISutTypes {
+    const adminsRepository = new AdminsRepositoryMemory();
+    const sut = new DeleteAdminUseCase(adminsRepository);
+
+    return {
+        adminsRepository,
+        sut,
+    };
+}
+
 describe("Delete admin", () => {
     it("Should be able delete a admin", async () => {
-        const adminsRepository = new AdminsRepositoryMemory();
-        const deleteAdminUseCase = new DeleteAdminUseCase(adminsRepository);
+        const { sut, adminsRepository } = makeSut();
 
         const admin = {
             name: "teste",
@@ -21,7 +33,7 @@ describe("Delete admin", () => {
 
         if (!result) throw new AppError("Error Test delete");
 
-        await deleteAdminUseCase.execute({ id: result.id });
+        await sut.execute({ id: result.id });
 
         const existedAdmin = await adminsRepository.findByID(result.id);
 
@@ -29,18 +41,55 @@ describe("Delete admin", () => {
     });
 
     it("Should be impossible delete a inexistent admin", async () => {
+        const { sut, adminsRepository } = makeSut();
+
+        jest.spyOn(adminsRepository, "findByID").mockResolvedValueOnce(null);
+
+        const admin = {
+            id: "invalid_id",
+            name: "teste",
+            email: "teste@gmail.com",
+            password: "123teste",
+        };
+
         await expect(async () => {
-            const adminsRepository = new AdminsRepositoryMemory();
-            const deleteAdminUseCase = new DeleteAdminUseCase(adminsRepository);
+            await sut.execute({ id: admin.id });
+        }).rejects.toEqual(new AppError("Admin not found", 400));
+    });
 
-            const admin = {
-                id: uuidv4(),
-                name: "teste",
-                email: "teste@gmail.com",
-                password: "123teste",
-            };
+    it("Should call adminsRepository.findByID with correct params", async () => {
+        const { sut, adminsRepository } = makeSut();
 
-            await deleteAdminUseCase.execute({ id: admin.id });
-        }).rejects.toBeInstanceOf(AppError);
+        const admin = {
+            id: "invalid_id",
+            name: "teste",
+            email: "teste@gmail.com",
+            password: "123teste",
+        };
+
+        const findByIdSpy = jest.spyOn(adminsRepository, "findByID");
+
+        await expect(async () => {
+            await sut.execute(admin);
+        }).rejects.toEqual(new AppError("Admin not found", 400));
+        expect(findByIdSpy).toHaveBeenCalledWith(admin.id);
+    });
+
+    it("Should call adminsRepository.delete with correct params", async () => {
+        const { sut, adminsRepository } = makeSut();
+
+        const admin = {
+            id: "invalid_id",
+            name: "teste",
+            email: "teste@gmail.com",
+            password: "123teste",
+        };
+
+        jest.spyOn(adminsRepository, "findByID").mockResolvedValueOnce(admin);
+        const deleteSpy = jest.spyOn(adminsRepository, "delete");
+
+        await sut.execute(admin);
+
+        expect(deleteSpy).toHaveBeenCalledWith(admin.id);
     });
 });

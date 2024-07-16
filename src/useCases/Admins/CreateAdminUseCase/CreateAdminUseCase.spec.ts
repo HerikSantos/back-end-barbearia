@@ -1,5 +1,6 @@
 import validator from "validator";
 
+import { AppError } from "../../../errors/AppErros";
 import { AdminsRepositoryMemory } from "../../../repositories/AdminsRepositoryMemory";
 import { cryptPassword } from "../../../utils/cryptPassword";
 import { CreateAdminUseCase } from "./CreateAdminUseCase";
@@ -113,10 +114,7 @@ describe("Create a new admin", () => {
 
         await expect(async () => {
             await sut.execute(admin);
-        }).rejects.toMatchObject({
-            message: "Email is not valid",
-            statusCode: 400,
-        });
+        }).rejects.toEqual(new AppError("Email is not valid", 400));
     });
 
     it("Should be impossible create a admin with email already exists", async () => {
@@ -132,9 +130,6 @@ describe("Create a new admin", () => {
 
         await expect(async () => {
             await sut.execute(admin);
-        }).rejects.toMatchObject({
-            message: "Email is not valid",
-            statusCode: 400,
-        });
+        }).rejects.toEqual(new AppError("Email is not valid", 400));
     });
 });
