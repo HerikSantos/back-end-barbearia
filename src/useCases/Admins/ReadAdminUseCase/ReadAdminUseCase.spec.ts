@@ -14,8 +14,17 @@ describe("Read admins", () => {
 
         await adminsRepository.create(admin);
 
-        const admins = await readAdminUseCase.execute();
+        const findedAdmin = await readAdminUseCase.execute();
 
-        expect(admins).toHaveLength(1);
+        expect(findedAdmin).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    name: "teste dos santos",
+                    email: "teste@gmail.com",
+                    password: "teste",
+                }),
+            ]),
+        );
+        expect(findedAdmin[0]).toHaveProperty("id");
     });
 });
