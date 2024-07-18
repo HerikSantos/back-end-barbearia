@@ -20,8 +20,6 @@ class UpdateAdminUseCase {
     }
 
     async execute({ id, name, email, password }: IRequest): Promise<Admins> {
-        if (!id) throw new AppError("Id is required");
-
         if (password) {
             password = await cryptPassword(password);
         }
@@ -33,16 +31,16 @@ class UpdateAdminUseCase {
 
         const existedAdmin = await this.adminsRepository.findByID(id);
 
-        if (!existedAdmin) throw new AppError("Email is not valid", 400);
-
-        const editedAdmin = await this.adminsRepository.edit({
+        if (!existedAdmin) {
+            throw new AppError("ID is not valid", 400);
+        }
+        // eslint-disable-next-line
+        const editedAdmin = (await this.adminsRepository.edit({
             id,
             name,
             email,
             password,
-        });
-
-        if (!editedAdmin) throw new AppError("Admin not found", 400);
+        })) as Admins;
 
         const result = {
             id: editedAdmin.id,
