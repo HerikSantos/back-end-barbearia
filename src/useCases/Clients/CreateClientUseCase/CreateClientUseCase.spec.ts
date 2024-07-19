@@ -35,7 +35,7 @@ describe("Create client", () => {
         expect(clientExist).toHaveProperty("id");
     });
 
-    it("not should be possible create a new client who exsit", async () => {
+    it("Not should be possible create a new client who exists", async () => {
         const { sut } = makeSut();
 
         const cliente = {
@@ -49,5 +49,54 @@ describe("Create client", () => {
         await expect(async () => {
             await sut.execute(cliente);
         }).rejects.toEqual(new AppError("Client already exists", 400));
+    });
+
+    it("Should call findOne with correct params", async () => {
+        const { sut, clientsRepository } = makeSut();
+
+        const client = {
+            name: "client teste",
+            qtd_cortes: 5,
+            data_nasc: new Date("2001-04-26"),
+        };
+
+        const findOneSpy = jest.spyOn(clientsRepository, "findOne");
+
+        await sut.execute(client);
+
+        expect(findOneSpy).toHaveBeenCalledWith({
+            name: client.name,
+            data_nasc: client.data_nasc,
+        });
+    });
+
+    it("Should call create with correct params", async () => {
+        const { sut, clientsRepository } = makeSut();
+
+        const client = {
+            name: "client teste",
+            qtd_cortes: 5,
+            data_nasc: new Date("2001-04-26"),
+        };
+
+        const createSpy = jest.spyOn(clientsRepository, "create");
+
+        await sut.execute(client);
+
+        expect(createSpy).toHaveBeenCalledWith(client);
+    });
+
+    it("Should throw if name is missing", async () => {
+        const { sut } = makeSut();
+
+        const client = {
+            name: "",
+            qtd_cortes: 5,
+            data_nasc: new Date("2001-04-26"),
+        };
+
+        await expect(async () => {
+            await sut.execute(client);
+        }).rejects.toEqual(new AppError("Missing data", 400));
     });
 });
