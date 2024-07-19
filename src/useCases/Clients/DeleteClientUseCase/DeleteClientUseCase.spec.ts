@@ -1,56 +1,99 @@
+import { type Clientes } from "../../../database/entities/Clientes";
 import { AppError } from "../../../errors/AppErros";
 import { ClientsRepositoryMemory } from "../../../repositories/ClientsRepositoryMemory";
+import { type IClientsRepository } from "../../../repositories/IClientsRepository";
 import { DeleteClientUseCase } from "./DeleteClientUseCase";
 
-let deleteClientUseCase: DeleteClientUseCase;
-let clientsRepositoryMemory: ClientsRepositoryMemory;
+interface ITypeSut {
+    sut: DeleteClientUseCase;
+    clientsRepository: IClientsRepository;
+}
+
+function makeSut(): ITypeSut {
+    const clientsRepository = new ClientsRepositoryMemory();
+    const sut = new DeleteClientUseCase(clientsRepository);
+
+    return {
+        sut,
+        clientsRepository,
+    };
+}
 
 describe("Delete client", () => {
-    beforeEach(() => {
-        clientsRepositoryMemory = new ClientsRepositoryMemory();
-        deleteClientUseCase = new DeleteClientUseCase(clientsRepositoryMemory);
-    });
-
     it("Should be possible delete an exists client", async () => {
+        const { sut, clientsRepository } = makeSut();
+
         const client = {
             name: "testando",
             data_nasc: new Date("2003-04-01"),
             qtd_cortes: 2,
         };
 
-        await clientsRepositoryMemory.create(client);
-
-        const createdClient = await clientsRepositoryMemory.findOne({
+        await clientsRepository.create(client);
+        // eslint-disable-next-line
+        const createdClient = (await clientsRepository.findOne({
             name: client.name,
             data_nasc: client.data_nasc,
-        });
+        })) as Clientes;
 
-        if (!createdClient) throw new AppError("Client not found");
+        await sut.execute(createdClient.id);
 
-        await deleteClientUseCase.execute(createdClient.id);
-
-        const deletedClient =
-            await clientsRepositoryMemory.findOne(createdClient);
+        const deletedClient = await clientsRepository.findOne(createdClient);
 
         expect(deletedClient).toBeNull();
     });
 
     it("Should be impossible delete a nonexistent client", async () => {
+        const { sut } = makeSut();
+
+        const fakeClient = {
+            id: "invalid_id",
+            name: "testando",
+            data_nasc: new Date("2003-04-01"),
+            qtd_cortes: 2,
+        };
+
         await expect(async () => {
-            const client = {
-                name: "testando",
-                data_nasc: new Date("2003-04-01"),
-                qtd_cortes: 2,
-            };
+            await sut.execute(fakeClient.id);
+        }).rejects.toEqual(new AppError("Client not found", 400));
+    });
 
-            await clientsRepositoryMemory.create(client);
+    it("Should call findByID with correct param", async () => {
+        const { sut, clientsRepository } = makeSut();
 
-            const createdClient = await clientsRepositoryMemory.findOne({
-                name: "Joao",
-                data_nasc: client.data_nasc,
-            });
+        const fakeClient = {
+            id: "invalid_id",
+            name: "testando",
+            data_nasc: new Date("2003-04-01"),
+            qtd_cortes: 2,
+        };
 
-            if (!createdClient) throw new AppError("Client not found");
-        }).rejects.toBeInstanceOf(AppError);
+        const findByIdSpy = jest
+            .spyOn(clientsRepository, "findByID")
+            .mockResolvedValueOnce(fakeClient);
+
+        await sut.execute(fakeClient.id);
+
+        expect(findByIdSpy).toHaveBeenCalledWith(fakeClient.id);
+    });
+
+    it("Should call delete with correct param", async () => {
+        const { sut, clientsRepository } = makeSut();
+
+        const fakeClient = {
+            id: "invalid_id",
+            name: "testando",
+            data_nasc: new Date("2003-04-01"),
+            qtd_cortes: 2,
+        };
+        jest.spyOn(clientsRepository, "findByID").mockResolvedValueOnce(
+            fakeClient,
+        );
+
+        const deleteSpy = jest.spyOn(clientsRepository, "delete");
+
+        await sut.execute(fakeClient.id);
+
+        expect(deleteSpy).toHaveBeenCalledWith(fakeClient.id);
     });
 });
