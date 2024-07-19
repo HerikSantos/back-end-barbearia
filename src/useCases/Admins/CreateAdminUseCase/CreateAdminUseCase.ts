@@ -14,6 +14,10 @@ class CreateAdminUseCase {
     }
 
     async execute({ name, email, password }: IRequestAdmin): Promise<void> {
+        if (!name || !email || !password) {
+            throw new AppError("Missing data", 400);
+        }
+
         if (!validator.isEmail(email))
             throw new AppError("Email is not valid", 400);
 
