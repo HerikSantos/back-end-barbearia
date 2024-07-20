@@ -132,4 +132,88 @@ describe("Create a new admin", () => {
             await sut.execute(admin);
         }).rejects.toEqual(new AppError("Email is not valid", 400));
     });
+
+    it("Should throw if name is not string", async () => {
+        const { sut } = makeSut();
+
+        const admin = {
+            name: 2,
+            email: "teste@gmail.com",
+            password: "teste",
+        };
+
+        await expect(async () => {
+            await sut.execute(admin);
+        }).rejects.toEqual(new AppError("Invalid type data", 400));
+    });
+
+    it("Should throw if email is not string", async () => {
+        const { sut } = makeSut();
+
+        const admin = {
+            name: "teste dos santos",
+            email: ["herik@gmail.com"],
+            password: "teste",
+        };
+
+        await expect(async () => {
+            await sut.execute(admin);
+        }).rejects.toEqual(new AppError("Invalid type data", 400));
+    });
+
+    it("Should throw if password is not string", async () => {
+        const { sut } = makeSut();
+
+        const admin = {
+            name: "teste dos santos",
+            email: "teste@gmail.com",
+            password: 123,
+        };
+
+        await expect(async () => {
+            await sut.execute(admin);
+        }).rejects.toEqual(new AppError("Invalid type data", 400));
+    });
+
+    it("Should throw if name is undefined", async () => {
+        const { sut } = makeSut();
+
+        const admin = {
+            name: "",
+            email: "teste@gmail.com",
+            password: "123",
+        };
+
+        await expect(async () => {
+            await sut.execute(admin);
+        }).rejects.toEqual(new AppError("Missing data", 400));
+    });
+
+    it("Should throw if email is undefined", async () => {
+        const { sut } = makeSut();
+
+        const admin = {
+            name: "teste da silva",
+            email: "",
+            password: "123",
+        };
+
+        await expect(async () => {
+            await sut.execute(admin);
+        }).rejects.toEqual(new AppError("Missing data", 400));
+    });
+
+    it("Should throw if password is not string", async () => {
+        const { sut } = makeSut();
+
+        const admin = {
+            name: "teste da silva",
+            email: "teste@gmail.com",
+            password: "",
+        };
+
+        await expect(async () => {
+            await sut.execute(admin);
+        }).rejects.toEqual(new AppError("Missing data", 400));
+    });
 });
