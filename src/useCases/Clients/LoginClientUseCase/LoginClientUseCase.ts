@@ -24,10 +24,14 @@ class LoginClientUseCase {
         name: string;
         data_nasc: Date;
     }): Promise<IClientToken> {
+        if (!name || !data_nasc) {
+            throw new AppError("Missing data", 400);
+        }
+
         const client = await this.clientRepository.findOne({ name, data_nasc });
 
         if (!client) {
-            throw new AppError("Username is incorrect");
+            throw new AppError("Username or birthday is incorrect");
         }
 
         const tokenClient: IClientToken = {
