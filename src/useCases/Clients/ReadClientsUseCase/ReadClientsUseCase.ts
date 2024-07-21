@@ -14,17 +14,9 @@ class ReadClientsUseCase {
         });
 
         const clientsFormated = clients.map((client) => {
-            const result = {} as {
-                id: string;
-                name: string;
-                data_nasc: Date;
-                qtd_cortes: number;
-            };
+            const { createdAt, updateAt, ...formatedClient } = client;
 
-            result.id = client.id;
-            (result.name = client.name),
-                (result.data_nasc = client.data_nasc),
-                (result.qtd_cortes = client.qtd_cortes);
+            const result = Object.assign({}, formatedClient);
 
             return result;
         });
