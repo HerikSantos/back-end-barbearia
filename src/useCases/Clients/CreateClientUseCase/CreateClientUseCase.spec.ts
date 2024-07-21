@@ -160,4 +160,20 @@ describe("Create client", () => {
 
         expect(isValidateDateSpy).toHaveBeenCalledWith(client.data_nasc);
     });
+
+    it("Should throw if date is not valid", async () => {
+        const { sut } = makeSut();
+
+        const client = {
+            name: "teste da silva",
+            qtd_cortes: 2,
+            data_nasc: "2001-04-22",
+        };
+
+        (isValidDate as jest.Mock).mockImplementationOnce(() => false);
+
+        await expect(async () => {
+            await sut.execute(client.name, client.data_nasc, client.qtd_cortes);
+        }).rejects.toEqual(new AppError("Invalid type date", 400));
+    });
 });
