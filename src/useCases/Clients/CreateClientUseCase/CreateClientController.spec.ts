@@ -29,7 +29,7 @@ describe("Create client", () => {
     it("Should be possible create client", async () => {
         mockRequest.body = {
             name: "ticoteste",
-            data_nasc: new Date("2001-04-22"),
+            data_nasc: "2001-04-22",
             qtd_cortes: 2,
         };
 
@@ -43,7 +43,7 @@ describe("Create client", () => {
         await expect(async () => {
             mockRequest.body = {
                 name: "ticoteste",
-                data_nasc: new Date("2001-04-22"),
+                data_nasc: "2001-04-22",
                 // qtd_cortes: 2,
             };
 

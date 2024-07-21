@@ -50,12 +50,19 @@ describe("Verify token", () => {
         const client = {
             name: "teste da silva",
             qtd_cortes: 2,
-            data_nasc: new Date("2001-04-22"),
+            data_nasc: "2001-04-22",
         };
 
-        await createClientUseCase.execute(client);
+        await createClientUseCase.execute(
+            client.name,
+            client.data_nasc,
+            client.qtd_cortes,
+        );
 
-        const clientToken = await loginClientUseCase.execute(client);
+        const clientToken = await loginClientUseCase.execute({
+            ...client,
+            data_nasc: new Date(client.data_nasc),
+        });
 
         const { token } = clientToken;
 

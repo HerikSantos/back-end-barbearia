@@ -7,6 +7,7 @@ class ClientsRepositoryMemory implements IClientsRepository {
 
     async create({ data_nasc, name, qtd_cortes }: IRequest): Promise<void> {
         const clientes = new Clientes();
+
         const cliente = {
             data_nasc,
             name,
@@ -26,7 +27,10 @@ class ClientsRepositoryMemory implements IClientsRepository {
         data_nasc: Date;
     }): Promise<Clientes | null> {
         const findedClient = this.repositoryMemory.find((cliente) => {
-            return cliente.name === name && cliente.data_nasc === data_nasc;
+            return (
+                cliente.name === name &&
+                cliente.data_nasc.getTime() === data_nasc.getTime()
+            );
         });
         if (!findedClient) return null;
         return findedClient;

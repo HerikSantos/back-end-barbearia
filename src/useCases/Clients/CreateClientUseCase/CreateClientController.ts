@@ -12,11 +12,7 @@ class CreateClienteController {
     async handle(request: Request, response: Response): Promise<Response> {
         const { name, qtd_cortes, data_nasc } = request.body;
 
-        await this.createClientUseCase.execute({
-            name,
-            data_nasc,
-            qtd_cortes,
-        });
+        await this.createClientUseCase.execute(name, data_nasc, qtd_cortes);
 
         return response.status(201).send();
     }
