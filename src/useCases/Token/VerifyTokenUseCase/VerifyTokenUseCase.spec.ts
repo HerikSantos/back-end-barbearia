@@ -61,7 +61,7 @@ describe("Verify token", () => {
 
         const clientToken = await loginClientUseCase.execute({
             ...client,
-            data_nasc: new Date(client.data_nasc),
+            data_nasc: client.data_nasc,
         });
 
         const { token } = clientToken;
