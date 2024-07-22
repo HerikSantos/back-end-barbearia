@@ -116,16 +116,45 @@ describe("Create client", () => {
         }).rejects.toEqual(new AppError("Missing data", 400));
     });
 
+    it("Should throw if data_nasc is invalid type", async () => {
+        const { sut } = makeSut();
+
+        const client = {
+            name: "teste da silva",
+            data_nasc: new Date("2001-04-26"),
+            qtd_cortes: 1,
+        };
+
+        await expect(async () => {
+            await sut.execute(client.name, client.data_nasc, client.qtd_cortes);
+        }).rejects.toEqual(new AppError("Invalid type or missing data", 400));
+    });
+
+    it("Should throw if name is invalid type", async () => {
+        const { sut } = makeSut();
+
+        const client = {
+            name: 3,
+            data_nasc: "2001-04-26",
+            qtd_cortes: 1,
+        };
+
+        await expect(async () => {
+            await sut.execute(client.name, client.data_nasc, client.qtd_cortes);
+        }).rejects.toEqual(new AppError("Invalid type or missing data", 400));
+    });
+
     it("Should throw if qtd_cortes is undefined", async () => {
         const { sut } = makeSut();
 
         const client = {
             name: "teste da silva",
             data_nasc: "2001-04-26",
+            qtd_cortes: "",
         };
 
         await expect(async () => {
-            await sut.execute(client.name, client.data_nasc, client);
+            await sut.execute(client.name, client.data_nasc, client.qtd_cortes);
         }).rejects.toEqual(new AppError("Invalid type or missing data", 400));
     });
 
@@ -167,7 +196,7 @@ describe("Create client", () => {
         const client = {
             name: "teste da silva",
             qtd_cortes: 2,
-            data_nasc: "2001-04-22",
+            data_nasc: "2",
         };
 
         (isValidDate as jest.Mock).mockImplementationOnce(() => false);
