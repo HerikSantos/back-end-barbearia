@@ -22,31 +22,36 @@ class LoginClientUseCase {
         data_nasc,
     }: {
         name: string;
-        data_nasc: Date;
+        data_nasc: string;
     }): Promise<IClientToken> {
-        if (!name || !data_nasc) {
+        if (typeof name !== "string" || typeof data_nasc !== "string") {
+            throw new AppError("Invalid type or missing data", 400);
+        }
+
+        if (!data_nasc || !name) {
             throw new AppError("Missing data", 400);
         }
 
-        const client = await this.clientRepository.findOne({ name, data_nasc });
+        const client = await this.clientRepository.findOne({
+            name,
+            data_nasc: new Date(data_nasc),
+        });
 
         if (!client) {
             throw new AppError("Username or birthday is incorrect");
         }
 
-        const tokenClient: IClientToken = {
+        const tokenClient = {
             id: client.id,
             name: client.name,
-            data_nasc: client.data_nasc,
+            data_nasc: new Date(data_nasc),
         };
 
         const token = jwt.sign(tokenClient, env.JWT_SECRET, {
             expiresIn: "7D",
         });
 
-        tokenClient.token = token;
-
-        return tokenClient;
+        return { ...tokenClient, token };
     }
 }
 

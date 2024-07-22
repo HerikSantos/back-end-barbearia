@@ -32,12 +32,15 @@ describe("Login client", () => {
         const client = {
             name: "teste da silva",
             qtd_cortes: 2,
-            data_nasc: new Date("2001-02-20"),
+            data_nasc: "2001-02-20",
         };
 
         jest.spyOn(jwt, "sign").mockImplementationOnce(() => "valid_token");
 
-        await clientsRepository.create(client);
+        await clientsRepository.create({
+            ...client,
+            data_nasc: new Date(client.data_nasc),
+        });
 
         const result = await sut.execute(client);
 
@@ -52,7 +55,7 @@ describe("Login client", () => {
         const client = {
             name: "teste da silva",
             qtd_cortes: 2,
-            data_nasc: new Date("2001-02-20"),
+            data_nasc: "2001-02-20",
         };
 
         await expect(async () => await sut.execute(client)).rejects.toEqual(
@@ -66,18 +69,22 @@ describe("Login client", () => {
         const client = {
             name: "teste da silva",
             qtd_cortes: 2,
-            data_nasc: new Date("2001-02-20"),
+            data_nasc: "2001-02-20",
         };
 
         const findOneSpy = jest
             .spyOn(clientsRepository, "findOne")
-            .mockResolvedValueOnce({ ...client, id: "valid_id" });
+            .mockResolvedValueOnce({
+                ...client,
+                data_nasc: new Date(client.data_nasc),
+                id: "valid_id",
+            });
 
         await sut.execute(client);
 
         expect(findOneSpy).toHaveBeenCalledWith({
             name: client.name,
-            data_nasc: client.data_nasc,
+            data_nasc: new Date(client.data_nasc),
         });
     });
 
@@ -87,13 +94,14 @@ describe("Login client", () => {
         const client = {
             name: "teste da silva",
             qtd_cortes: 2,
-            data_nasc: new Date("2001-02-20"),
+            data_nasc: "2001-02-20",
         };
 
         jest.spyOn(jwt, "sign").mockImplementationOnce(() => "valid_token");
 
         jest.spyOn(clientsRepository, "findOne").mockResolvedValueOnce({
             ...client,
+            data_nasc: new Date(client.data_nasc),
             id: "valid_id",
         });
 
@@ -102,19 +110,41 @@ describe("Login client", () => {
         expect(result.token).toEqual("valid_token");
     });
 
+    it("Should be not possible login with incorrect data", async () => {
+        const { sut, clientsRepository } = makeSut();
+
+        const client = {
+            name: "teste da silva",
+            qtd_cortes: 2,
+            data_nasc: "2001-02-20",
+        };
+
+        jest.spyOn(jwt, "sign").mockImplementationOnce(() => "valid_token");
+
+        await clientsRepository.create({
+            ...client,
+            data_nasc: new Date(client.data_nasc),
+        });
+
+        await expect(
+            async () => await sut.execute({ ...client, name: "capitao teste" }),
+        ).rejects.toEqual(new AppError("Username or birthday is incorrect"));
+    });
+
     it("Should call jwt with correct params", async () => {
         const { sut, clientsRepository } = makeSut();
 
         const client = {
             name: "teste da silva",
             qtd_cortes: 2,
-            data_nasc: new Date("2001-02-20"),
+            data_nasc: "2001-02-20",
         };
 
         const jwtSpy = jest.spyOn(jwt, "sign");
 
         jest.spyOn(clientsRepository, "findOne").mockResolvedValueOnce({
             ...client,
+            data_nasc: new Date(client.data_nasc),
             id: "valid_id",
         });
 
@@ -129,5 +159,53 @@ describe("Login client", () => {
             env.JWT_SECRET,
             { expiresIn: "7D" },
         );
+    });
+
+    it("Should throw if data_nasc is undefined", async () => {
+        const { sut } = makeSut();
+
+        const client = {
+            name: "teste da silva",
+            data_nasc: "",
+        };
+
+        await expect(async () => {
+            await sut.execute(client);
+        }).rejects.toEqual(new AppError("Missing data", 400));
+    });
+
+    it("Should throw if name is undefined", async () => {
+        const { sut } = makeSut();
+
+        const client = {
+            name: "",
+            data_nasc: "2000-04-22",
+        };
+
+        await expect(async () => {
+            await sut.execute(client);
+        }).rejects.toEqual(new AppError("Missing data", 400));
+    });
+
+    it("should throw an error if data_nasc is not a string", async () => {
+        const { sut } = makeSut();
+
+        await expect(
+            sut.execute({
+                name: "herik",
+                data_nasc: new Date("2001-02-22") as unknown as string,
+            }),
+        ).rejects.toEqual(new AppError("Invalid type or missing data", 400));
+    });
+
+    it("should throw an error if name is not a string", async () => {
+        const { sut } = makeSut();
+
+        await expect(
+            sut.execute({
+                name: 2 as unknown as string,
+                data_nasc: "2001-02-22",
+            }),
+        ).rejects.toEqual(new AppError("Invalid type or missing data", 400));
     });
 });

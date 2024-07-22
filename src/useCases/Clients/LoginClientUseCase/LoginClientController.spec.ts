@@ -25,13 +25,16 @@ describe("Login client", () => {
 
         const client = {
             name: "teste da silva",
-            data_nasc: new Date("2001-02-20"),
+            data_nasc: "2001-02-20",
             qtd_cortes: 2,
         };
 
         mockRequest.body = client;
 
-        await clientRepositoryMemory.create(client);
+        await clientRepositoryMemory.create({
+            ...client,
+            data_nasc: new Date(client.data_nasc),
+        });
 
         await loginClientController.handle(mockRequest, mockResponse);
 

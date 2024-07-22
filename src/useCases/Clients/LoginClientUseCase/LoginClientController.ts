@@ -10,8 +10,7 @@ class LoginClientController {
     }
 
     async handle(request: Request, response: Response): Promise<Response> {
-        const { name, data_nasc }: { name: string; data_nasc: Date } =
-            request.body;
+        const { name, data_nasc } = request.body;
 
         const clientLoged = await this.loginClientUseCase.execute({
             name,
