@@ -17,6 +17,10 @@ function makeSut(): ITypeSut {
     };
 }
 
+jest.mock("uuid", () => ({
+    v4: jest.fn().mockReturnValue("fake_id"),
+}));
+
 describe("Should be list all clients", () => {
     it("List all client", async () => {
         const { sut, clientsRepository } = makeSut();
@@ -29,7 +33,7 @@ describe("Should be list all clients", () => {
         const client2 = {
             name: "herik2",
             qtd_cortes: 2,
-            data_nasc: new Date("2001-04-21"),
+            data_nasc: new Date("2001-04-26"),
         };
 
         await clientsRepository.create(client);
@@ -40,6 +44,15 @@ describe("Should be list all clients", () => {
             name: client.name,
         });
 
-        expect(findedClient).toHaveLength(2);
+        expect(findedClient[0]).toEqual({ ...client, id: "fake_id" });
+        expect(findedClient[1]).toEqual({ ...client2, id: "fake_id" });
+    });
+
+    it("Should return an empty array when there are no clients", async () => {
+        const { sut } = makeSut();
+
+        const findedClient = await sut.execute({});
+
+        expect(findedClient).toEqual([]);
     });
 });
