@@ -16,9 +16,7 @@ class ReadClientsUseCase {
         const clientsFormated = clients.map((client) => {
             const { createdAt, updateAt, ...formatedClient } = client;
 
-            const result = Object.assign({}, formatedClient);
-
-            return result;
+            return Object.assign({}, formatedClient);
         });
         return clientsFormated;
     }
