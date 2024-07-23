@@ -1,3 +1,5 @@
+import { JsonWebTokenError } from "jsonwebtoken";
+
 import { AppError } from "../../../errors/AppErros";
 import { type IAdminsRepository } from "../../../repositories/IAdminsRepository";
 import { type IClientsRepository } from "../../../repositories/IClientsRepository";
@@ -35,15 +37,23 @@ class VerifyTokenUseCase {
 
                 const admin = await this.adminRepository.findByID(id);
 
-                if (!admin) throw new AppError("Token invalid");
+                if (!admin) throw new AppError("Token invalid", 400);
 
                 return;
             } catch (err) {
-                throw new AppError("Token invalid");
+                if (err instanceof JsonWebTokenError) {
+                    throw new AppError("Token invalid", 400);
+                }
+
+                if (err instanceof AppError) {
+                    throw new AppError("Token invalid", 400);
+                }
+
+                throw new AppError("Internal Error", 500);
             }
         }
 
-        throw new AppError("Repository is required");
+        throw new AppError("Almost one repository is required");
     }
 
     async verifyTokenClient(token: string): Promise<void> {
@@ -55,15 +65,23 @@ class VerifyTokenUseCase {
 
                 const client = await this.clientsRepository.findByID(id);
 
-                if (!client) throw new AppError("Token invalid");
+                if (!client) throw new AppError("Token invalid", 400);
 
                 return;
-            } catch (error) {
-                throw new AppError("Token invalid ");
+            } catch (err) {
+                if (err instanceof JsonWebTokenError) {
+                    throw new AppError("Token invalid", 400);
+                }
+
+                if (err instanceof AppError) {
+                    throw new AppError("Token invalid", 400);
+                }
+
+                throw new AppError("Internal Error", 500);
             }
         }
 
-        throw new AppError("Repository is required");
+        throw new AppError("Almost one repository is required");
     }
 }
 
