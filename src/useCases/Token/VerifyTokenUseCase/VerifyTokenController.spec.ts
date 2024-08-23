@@ -72,9 +72,6 @@ describe("Veirify token", () => {
             password: "123abc",
         };
 
-        if (!process.env.JWT_SECRET)
-            throw new AppError("A key JWT_SECRET in dotenv is required ");
-
         const token = jwt.sign(admin, env.JWT_SECRET);
 
         mockRequest.body = { token };
